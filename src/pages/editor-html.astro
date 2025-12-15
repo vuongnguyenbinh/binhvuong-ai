@@ -294,9 +294,85 @@
             flex: 1; 
             overflow-y: auto;
             background: var(--white);
+            color: var(--charcoal);
         }
         body.dark .panel-body {
             background: var(--box-dark);
+            color: var(--neutral);
+        }
+        
+        /* Fix tất cả elements trong panel-body cho dark mode */
+        body.dark .panel-body * {
+            color: inherit;
+        }
+        body.dark .panel-body .prop-group-title {
+            color: #9ca3af;
+            border-color: #3f3f46;
+        }
+        body.dark .panel-body .prop-label {
+            color: #9ca3af;
+        }
+        body.dark .panel-body .prop-input {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+            color: var(--neutral);
+        }
+        body.dark .panel-body .element-info {
+            background: var(--charcoal);
+            border-left: 4px solid var(--red);
+        }
+        body.dark .panel-body .element-path {
+            color: #9ca3af;
+        }
+        body.dark .panel-body .rte-toolbar {
+            background: var(--charcoal);
+        }
+        body.dark .panel-body .rte-btn {
+            color: var(--neutral);
+        }
+        body.dark .panel-body .rte-btn:hover {
+            background: var(--box-dark);
+            border-color: #3f3f46;
+        }
+        body.dark .panel-body .rte-divider {
+            background: #3f3f46;
+        }
+        body.dark .panel-body .input-group-btn {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+            color: var(--neutral);
+        }
+        body.dark .panel-body .toggle-label {
+            color: var(--neutral);
+        }
+        body.dark .panel-body .toggle {
+            background: #3f3f46;
+        }
+        body.dark .panel-body .action-btn {
+            border-color: #3f3f46;
+            color: var(--neutral);
+            background: transparent;
+        }
+        body.dark .panel-body .action-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        body.dark .panel-body .action-btn.danger {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        body.dark .panel-body .action-buttons {
+            border-color: #3f3f46;
+        }
+        body.dark .panel-body .color-preview {
+            border-color: #3f3f46;
+        }
+        body.dark .panel-body .no-selection {
+            color: #9ca3af;
+        }
+        body.dark .panel-body .code-editor {
+            background: var(--charcoal);
+            border-color: #3f3f46;
             color: var(--neutral);
         }
         
@@ -347,16 +423,28 @@
         .layer-item:hover { background: rgba(218,37,29,0.05); }
         body.dark .layer-item:hover { background: rgba(218,37,29,0.15); }
         .layer-item.selected { 
-            background: rgba(218,37,29,0.1); 
-            color: var(--red); 
-            border-left: 3px solid var(--red);
+            background: rgba(218,37,29,0.15) !important; 
+            color: var(--red) !important; 
+            border-left: 3px solid var(--red) !important;
+            font-weight: 600;
         }
         body.dark .layer-item.selected { 
-            background: rgba(218,37,29,0.2); 
-            color: var(--red);
-            border-left: 3px solid var(--red);
+            background: rgba(218,37,29,0.25) !important; 
+            color: #ff6b6b !important;
+            border-left: 3px solid var(--red) !important;
+            font-weight: 600;
         }
-        .layer-item.selected .layer-tag { color: var(--red); background: rgba(218,37,29,0.15); }
+        .layer-item.selected .layer-tag { 
+            color: var(--red) !important; 
+            background: rgba(218,37,29,0.2) !important; 
+        }
+        body.dark .layer-item.selected .layer-tag {
+            color: #ff6b6b !important;
+            background: rgba(218,37,29,0.3) !important;
+        }
+        body.dark .layer-item.selected .layer-text {
+            color: #ff6b6b !important;
+        }
         .layer-tag { 
             font-family: monospace; 
             font-size: 11px;
@@ -365,7 +453,10 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
-        body.dark .layer-tag { background: var(--charcoal); }
+        body.dark .layer-tag { 
+            background: var(--charcoal); 
+            color: #9ca3af;
+        }
         .layer-text {
             flex: 1;
             overflow: hidden;
