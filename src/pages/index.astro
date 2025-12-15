@@ -1,12 +1,9 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+// Standalone version - không phụ thuộc Tailwind config
 ---
 
 <!DOCTYPE html>
-<html lang="vi" class="dark">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,347 +13,947 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
     <!-- Google Fonts: Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Tailwind Config based on Guideline -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                    colors: {
-                        charcoal: '#1E1E2A',
-                        'charcoal-light': '#27272A',
-                        neutral: '#F2F2F7',
-                        red: '#DA251D',
-                        white: '#FFFFFF',
-                        'bv-blue': '#3B82F6',
-                        'bv-green': '#10B981',
-                        'bv-purple': '#8B5CF6',
-                    },
-                    borderRadius: {
-                        'brand': '8px',
-                    },
-                    animation: {
-                        'float': 'float 3s ease-in-out infinite',
-                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'flow-line': 'flow-line 2s linear infinite',
-                    },
-                    keyframes: {
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0)' },
-                            '50%': { transform: 'translateY(-10px)' },
-                        },
-                        'pulse-glow': {
-                            '0%, 100%': { opacity: 1, boxShadow: '0 0 10px #DA251D' },
-                            '50%': { opacity: .7, boxShadow: '0 0 20px #DA251D' },
-                        },
-                        'flow-line': {
-                            '0%': { strokeDashoffset: '24' },
-                            '100%': { strokeDashoffset: '0' },
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 
     <style>
-        html { scroll-behavior: smooth; }
-        body { background-color: #1E1E2A; color: #F2F2F7; }
-        
-        /* Custom Background Pattern */
+        /* ========== CSS RESET & BASE ========== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --charcoal: #1E1E2A;
+            --charcoal-light: #27272A;
+            --neutral: #F2F2F7;
+            --red: #DA251D;
+            --white: #FFFFFF;
+            --bv-blue: #3B82F6;
+            --bv-green: #10B981;
+            --bv-purple: #8B5CF6;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--charcoal);
+            color: var(--neutral);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        button {
+            cursor: pointer;
+            border: none;
+            font-family: inherit;
+        }
+
+        input, textarea, select {
+            font-family: inherit;
+        }
+
+        ::selection {
+            background-color: var(--red);
+            color: var(--white);
+        }
+
+        /* ========== BACKGROUND PATTERN ========== */
         .bg-grid-pattern {
-            background-image: linear-gradient(to right, #27272a 1px, transparent 1px),
-                              linear-gradient(to bottom, #27272a 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(circle at center, black 40%, transparent 100%); 
-        }
-
-        /* Animation Connection Lines */
-        .connector-line {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: #374151;
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
             z-index: 0;
-            transform: translateY(-50%);
-        }
-        
-        .connector-dot {
-            position: absolute;
-            top: 50%;
-            left: 0;
-            width: 8px;
-            height: 8px;
-            background: #DA251D;
-            border-radius: 50%;
-            transform: translateY(-50%);
-            animation: moveDot 2s linear infinite;
+            opacity: 0.3;
+            background-image: 
+                linear-gradient(to right, var(--charcoal-light) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--charcoal-light) 1px, transparent 1px);
+            background-size: 40px 40px;
+            mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
+            -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 100%);
         }
 
-        @keyframes moveDot {
-            0% { left: 0; opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { left: 100%; opacity: 0; }
+        /* ========== HEADER / NAV ========== */
+        .nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            background-color: rgba(30, 30, 42, 0.9);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-800);
         }
 
-        /* Loading Spinner */
-        .loader {
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top: 3px solid #DA251D;
+        .nav-container {
+            max-width: 1152px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .nav-logo img {
+            height: 40px;
+            width: auto;
+            filter: brightness(1.25);
+        }
+
+        .nav-logo span {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--white);
+            letter-spacing: -0.025em;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-ghost {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--white);
+        }
+
+        .btn-ghost:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-primary {
+            background-color: var(--red);
+            color: var(--white);
+            box-shadow: 0 0 20px rgba(218, 37, 29, 0.4);
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main {
+            position: relative;
+            z-index: 10;
+            flex-grow: 1;
+        }
+
+        /* ========== HERO SECTION ========== */
+        .hero {
+            padding: 4rem 1rem 5rem;
+            text-align: center;
+            max-width: 896px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            background-color: rgba(218, 37, 29, 0.1);
+            color: var(--red);
+            border: 1px solid rgba(218, 37, 29, 0.2);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: -0.025em;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero h1 .highlight {
+            color: var(--red);
+        }
+
+        .hero h1 .subtitle {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--gray-400);
+            margin-top: 0.5rem;
+        }
+
+        .hero-description {
+            font-size: 1.125rem;
+            color: var(--gray-400);
+            max-width: 672px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.75;
+        }
+
+        .hero-description strong {
+            color: var(--white);
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 2rem;
+            background-color: var(--red);
+            color: var(--white);
+            font-weight: 700;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(218, 37, 29, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 50px rgba(218, 37, 29, 0.4);
+        }
+
+        .hero-cta svg {
             width: 20px;
             height: 20px;
+        }
+
+        /* ========== PROCESS SECTION ========== */
+        .process-section {
+            padding: 4rem 1rem;
+            background-color: rgba(39, 39, 42, 0.5);
+            border-top: 1px solid var(--gray-800);
+            border-bottom: 1px solid var(--gray-800);
+        }
+
+        .process-container {
+            max-width: 1152px;
+            margin: 0 auto;
+        }
+
+        .process-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .process-header h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .process-header p {
+            font-size: 0.875rem;
+            color: var(--gray-400);
+        }
+
+        .process-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 2rem;
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .process-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 1rem;
+            }
+            
+            .hero h1 {
+                font-size: 3.75rem;
+            }
+            
+            .hero h1 .subtitle {
+                font-size: 2.25rem;
+            }
+            
+            .hero-description {
+                font-size: 1.25rem;
+            }
+        }
+
+        .process-step {
+            position: relative;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .process-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background-color: var(--charcoal);
+            border: 1px solid var(--gray-600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .process-step:hover .process-icon {
+            border-color: var(--red);
+        }
+
+        .process-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--gray-300);
+            transition: color 0.3s ease;
+        }
+
+        .process-step:hover .process-icon svg {
+            color: var(--red);
+        }
+
+        .process-icon.purple {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .process-icon.purple svg {
+            color: var(--bv-purple);
+            animation: pulse 2s infinite;
+        }
+
+        .process-icon.blue {
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .process-icon.blue svg {
+            color: var(--bv-blue);
+        }
+
+        .process-icon.green {
+            border-color: rgba(16, 185, 129, 0.5);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .process-icon.green svg {
+            color: var(--bv-green);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .process-step h3 {
+            margin-top: 1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .process-step p {
+            font-size: 0.75rem;
+            color: var(--gray-500);
+            margin-top: 0.25rem;
+        }
+
+        /* Connector dots (desktop only) */
+        .connector {
+            display: none;
+        }
+
+        @media (min-width: 768px) {
+            .connector {
+                display: block;
+                position: absolute;
+                top: 40px;
+                right: 50%;
+                width: 100%;
+                height: 2px;
+                background-color: var(--gray-800);
+                z-index: -1;
+            }
+
+            .connector-dot {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 8px;
+                height: 8px;
+                background-color: var(--red);
+                border-radius: 50%;
+                transform: translateY(-50%);
+                animation: moveDot 2s linear infinite;
+            }
+
+            @keyframes moveDot {
+                0% { left: 0; opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { left: 100%; opacity: 0; }
+            }
+        }
+
+        /* ========== FORM SECTION ========== */
+        .form-section {
+            padding: 5rem 1rem;
+        }
+
+        .form-container {
+            max-width: 672px;
+            margin: 0 auto;
+            background-color: var(--charcoal-light);
+            border: 1px solid var(--gray-700);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-decoration {
+            position: absolute;
+            top: -40px;
+            right: -40px;
+            width: 160px;
+            height: 160px;
+            background: rgba(218, 37, 29, 0.1);
+            border-radius: 50%;
+            filter: blur(48px);
+        }
+
+        .form-container h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-container > p {
+            color: var(--gray-400);
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-300);
+            margin-bottom: 0.5rem;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper svg {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            width: 20px;
+            height: 20px;
+            color: var(--gray-500);
+        }
+
+        .form-input {
+            width: 100%;
+            background-color: var(--charcoal);
+            border: 1px solid var(--gray-600);
+            border-radius: 8px;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            color: var(--white);
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input::placeholder {
+            color: var(--gray-500);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 2px rgba(218, 37, 29, 0.2);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        select.form-input {
+            appearance: none;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+
+        .select-wrapper .chevron {
+            position: absolute;
+            right: 12px;
+            top: 14px;
+            pointer-events: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: var(--red);
+            color: var(--white);
+            font-weight: 700;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            box-shadow: 0 10px 40px rgba(218, 37, 29, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        .submit-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .form-note {
+            font-size: 0.75rem;
+            text-align: center;
+            color: var(--gray-500);
+            margin-top: 1rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            display: none;
+            position: absolute;
+            inset: 0;
+            background-color: var(--charcoal-light);
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem;
+            z-index: 20;
+        }
+
+        .success-message.show {
+            display: flex;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(16, 185, 129, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .success-icon svg {
+            width: 40px;
+            height: 40px;
+            color: var(--bv-green);
+        }
+
+        .success-message h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .success-message p {
+            color: var(--gray-400);
+            margin-bottom: 1.5rem;
+        }
+
+        .reset-btn {
+            padding: 0.5rem 1.5rem;
+            border: 1px solid var(--gray-600);
+            color: var(--white);
+            border-radius: 8px;
+            background: transparent;
+            transition: background 0.2s ease;
+        }
+
+        .reset-btn:hover {
+            background-color: var(--gray-700);
+        }
+
+        /* ========== FOOTER ========== */
+        .footer {
+            background-color: var(--charcoal);
+            border-top: 1px solid var(--gray-800);
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-logo-icon {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--red);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-logo-icon div {
+            width: 16px;
+            height: 16px;
+            background-color: var(--red);
+            border-radius: 50%;
+        }
+
+        .footer-logo span {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .footer p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-socials {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-socials a {
+            color: var(--gray-400);
+            transition: color 0.2s ease;
+        }
+
+        .footer-socials a:hover {
+            color: var(--red);
+        }
+
+        .footer-socials svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        .footer-copyright {
+            font-size: 0.75rem;
+            color: var(--gray-600);
+        }
+
+        /* ========== LOADING SPINNER ========== */
+        .loader {
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
             animation: spin 1s linear infinite;
         }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 640px) {
+            .nav-logo span {
+                display: none;
+            }
+        }
     </style>
 </head>
-<body class="antialiased selection:bg-red selection:text-white flex flex-col min-h-screen">
+<body>
+    <!-- Background Pattern -->
+    <div class="bg-grid-pattern"></div>
 
-    <!-- Background Layer -->
-    <div class="fixed inset-0 pointer-events-none bg-grid-pattern z-0 opacity-30"></div>
-
-    <!-- HEADER -->
-    <nav class="sticky top-0 z-50 bg-charcoal/90 backdrop-blur-md border-b border-gray-800">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
-                <div class="flex items-center gap-3">
-                    <img src="https://binhvuong.vn/wp-content/uploads/2025/10/BinhvuongAImarketingdedang.webp" alt="Logo" class="h-10 w-auto filter brightness-125">
-                    <span class="font-bold text-xl tracking-tight text-white hidden sm:block">Bình Vương AI</span>
-                </div>
-                <div class="flex gap-4">
-                    <a href="#contact-form" class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-brand text-sm font-semibold transition-colors">Về Blog</a>
-                    <a href="#contact-form" class="bg-red hover:bg-red/90 text-white px-4 py-2 rounded-brand text-sm font-semibold shadow-[0_0_15px_rgba(218,37,29,0.5)] transition-all">Liên hệ ngay</a>
-                </div>
+    <!-- Header -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="/" class="nav-logo">
+                <img src="https://binhvuong.vn/wp-content/uploads/2025/10/BinhvuongAImarketingdedang.webp" alt="Bình Vương AI Logo">
+                <span>Bình Vương AI</span>
+            </a>
+            <div class="nav-buttons">
+                <a href="/blog" class="btn btn-ghost">Về Blog</a>
+                <a href="#contact-form" class="btn btn-primary">Liên hệ ngay</a>
             </div>
         </div>
     </nav>
 
-    <main class="relative z-10 flex-grow">
+    <!-- Main Content -->
+    <main class="main">
         
-        <!-- HERO SECTION -->
-        <section class="pt-16 pb-20 px-4 text-center max-w-4xl mx-auto">
-            <span class="inline-block py-1 px-3 rounded-full bg-red/10 text-red border border-red/20 text-xs font-bold uppercase tracking-wider mb-6 animate-pulse">
-                Automation & AI Marketing
-            </span>
-            <h1 class="text-4xl md:text-6xl font-bold text-white tracking-tight mb-6 leading-tight">
-                AI Marketing <span class="text-red">Dễ Dàng</span><br>
-                <span class="text-gray-400 font-medium text-2xl md:text-4xl">Đơn giản hoá quy trình phức tạp</span>
+        <!-- Hero Section -->
+        <section class="hero">
+            <span class="hero-badge">Automation & AI Marketing</span>
+            <h1>
+                AI Marketing <span class="highlight">Dễ Dàng</span>
+                <span class="subtitle">Đơn giản hoá quy trình phức tạp</span>
             </h1>
-            <p class="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed mb-10">
+            <p class="hero-description">
                 Chào mừng tới Blog của <strong>Bình Vương</strong>. Tại đây, tôi chia sẻ cách biến những lý thuyết AI khô khan thành 
-                <span class="text-white font-semibold">chiến lược Marketing thực chiến</span>. 
+                <strong>chiến lược Marketing thực chiến</strong>. 
                 Tự động hóa chăm sóc khách hàng, sáng tạo nội dung không giới hạn và tối ưu hóa vận hành doanh nghiệp chỉ với vài cú click.
             </p>
-            
-            <div class="flex justify-center gap-4">
-                <a href="#contact-form" class="group relative px-8 py-4 bg-red text-white font-bold rounded-brand overflow-hidden shadow-lg hover:shadow-red/50 transition-all transform hover:-translate-y-1">
-                    <span class="relative z-10 flex items-center gap-2">Nhận tư vấn ngay <i data-lucide="arrow-down" class="w-5 h-5 group-hover:animate-bounce"></i></span>
-                    <div class="absolute inset-0 bg-white/20 transform -skew-x-12 -translate-x-full group-hover:translate-x-0 transition-transform duration-500"></div>
-                </a>
-            </div>
+            <a href="#contact-form" class="hero-cta">
+                <span>Nhận tư vấn ngay</span>
+                <i data-lucide="arrow-down"></i>
+            </a>
         </section>
 
-        <!-- ANIMATION PROCESS SECTION -->
-        <section class="py-16 bg-charcoal-light/50 border-y border-gray-800">
-            <div class="max-w-6xl mx-auto px-4">
-                <div class="text-center mb-12">
-                    <h2 class="text-2xl md:text-3xl font-bold text-white mb-2">Quy Trình Tự Động Hoá</h2>
-                    <p class="text-gray-400 text-sm">Cách hệ thống vận hành khi bạn gửi yêu cầu</p>
+        <!-- Process Section -->
+        <section class="process-section">
+            <div class="process-container">
+                <div class="process-header">
+                    <h2>Quy Trình Tự Động Hoá</h2>
+                    <p>Cách hệ thống vận hành khi bạn gửi yêu cầu</p>
                 </div>
 
-                <!-- Process Flow Animation -->
-                <div class="relative grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-4 items-center justify-items-center max-w-5xl mx-auto">
-                    
-                    <!-- Step 1: Nhận tin -->
-                    <div class="relative group z-10 text-center w-full">
-                        <div class="w-20 h-20 mx-auto bg-charcoal border border-gray-600 rounded-full flex items-center justify-center shadow-lg group-hover:border-red transition-colors duration-300">
-                            <i data-lucide="mail" class="w-8 h-8 text-gray-300 group-hover:text-red transition-colors"></i>
+                <div class="process-grid">
+                    <!-- Step 1 -->
+                    <div class="process-step">
+                        <div class="process-icon">
+                            <i data-lucide="mail"></i>
                         </div>
-                        <h3 class="mt-4 font-bold text-white">1. Nhận tin nhắn</h3>
-                        <p class="text-xs text-gray-500 mt-1">Từ Form đăng ký</p>
-                        
-                        <!-- Mobile connector (down) -->
-                        <div class="md:hidden absolute left-1/2 bottom-[-32px] w-0.5 h-8 bg-gray-700 -translate-x-1/2"></div>
+                        <h3>1. Nhận tin nhắn</h3>
+                        <p>Từ Form đăng ký</p>
                     </div>
 
-                    <!-- Step 2: AI Tư duy -->
-                    <div class="relative group z-10 text-center w-full">
-                        <!-- Desktop connector (left) -->
-                        <div class="hidden md:block absolute top-10 right-[50%] w-[100%] h-0.5 bg-gray-800 -z-10">
-                             <div class="connector-dot"></div>
+                    <!-- Step 2 -->
+                    <div class="process-step">
+                        <div class="connector">
+                            <div class="connector-dot"></div>
                         </div>
-
-                        <div class="w-20 h-20 mx-auto bg-charcoal border border-bv-purple/50 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(139,92,246,0.2)] animate-float">
-                            <i data-lucide="brain-circuit" class="w-8 h-8 text-bv-purple animate-pulse"></i>
+                        <div class="process-icon purple">
+                            <i data-lucide="brain-circuit"></i>
                         </div>
-                        <h3 class="mt-4 font-bold text-white">2. AI Phân tích</h3>
-                        <p class="text-xs text-gray-500 mt-1">Phân loại & Xử lý</p>
-                         <!-- Mobile connector -->
-                         <div class="md:hidden absolute left-1/2 bottom-[-32px] w-0.5 h-8 bg-gray-700 -translate-x-1/2"></div>
+                        <h3>2. AI Phân tích</h3>
+                        <p>Phân loại & Xử lý</p>
                     </div>
 
-                    <!-- Step 3: Gửi tóm tắt -->
-                    <div class="relative group z-10 text-center w-full">
-                        <!-- Desktop connector -->
-                        <div class="hidden md:block absolute top-10 right-[50%] w-[100%] h-0.5 bg-gray-800 -z-10">
+                    <!-- Step 3 -->
+                    <div class="process-step">
+                        <div class="connector">
                             <div class="connector-dot" style="animation-delay: 0.5s"></div>
                         </div>
-
-                        <div class="w-20 h-20 mx-auto bg-charcoal border border-bv-blue/50 rounded-full flex items-center justify-center shadow-lg">
-                            <i data-lucide="file-text" class="w-8 h-8 text-bv-blue"></i>
+                        <div class="process-icon blue">
+                            <i data-lucide="file-text"></i>
                         </div>
-                        <h3 class="mt-4 font-bold text-white">3. Tóm tắt gửi Admin</h3>
-                        <p class="text-xs text-gray-500 mt-1">Báo cáo qua Tele/Zalo</p>
-                         <!-- Mobile connector -->
-                         <div class="md:hidden absolute left-1/2 bottom-[-32px] w-0.5 h-8 bg-gray-700 -translate-x-1/2"></div>
+                        <h3>3. Tóm tắt gửi Admin</h3>
+                        <p>Báo cáo qua Tele/Zalo</p>
                     </div>
 
-                    <!-- Step 4: Phản hồi -->
-                    <div class="relative group z-10 text-center w-full">
-                         <!-- Desktop connector -->
-                         <div class="hidden md:block absolute top-10 right-[50%] w-[100%] h-0.5 bg-gray-800 -z-10">
+                    <!-- Step 4 -->
+                    <div class="process-step">
+                        <div class="connector">
                             <div class="connector-dot" style="animation-delay: 1s"></div>
                         </div>
-
-                        <div class="w-20 h-20 mx-auto bg-charcoal border border-bv-green/50 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.3)]">
-                            <i data-lucide="message-circle-heart" class="w-8 h-8 text-bv-green"></i>
+                        <div class="process-icon green">
+                            <i data-lucide="message-circle-heart"></i>
                         </div>
-                        <h3 class="mt-4 font-bold text-white">4. Phản hồi khách</h3>
-                        <p class="text-xs text-gray-500 mt-1">Tự động & Cá nhân hoá</p>
+                        <h3>4. Phản hồi khách</h3>
+                        <p>Tự động & Cá nhân hoá</p>
                     </div>
-
                 </div>
             </div>
         </section>
 
-        <!-- FORM SECTION -->
-        <section id="contact-form" class="py-20 px-4">
-            <div class="max-w-2xl mx-auto bg-charcoal-light border border-gray-700 rounded-xl p-8 shadow-2xl relative overflow-hidden">
-                <!-- Decorative element -->
-                <div class="absolute top-0 right-0 -mt-10 -mr-10 w-40 h-40 bg-red/10 rounded-full blur-3xl"></div>
+        <!-- Form Section -->
+        <section id="contact-form" class="form-section">
+            <div class="form-container">
+                <div class="form-decoration"></div>
                 
-                <h2 class="text-3xl font-bold text-white mb-2 relative z-10">Liên hệ tư vấn</h2>
-                <p class="text-gray-400 mb-8 relative z-10">Điền thông tin bên dưới, AI của tôi sẽ xử lý ngay lập tức.</p>
+                <h2>Liên hệ tư vấn</h2>
+                <p>Điền thông tin bên dưới, AI của tôi sẽ xử lý ngay lập tức.</p>
 
-                <form id="bvForm" class="space-y-6 relative z-10">
+                <form id="bvForm" class="form">
                     <!-- Name -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Họ và Tên</label>
-                        <div class="relative">
-                            <i data-lucide="user" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                            <input type="text" name="Name" required placeholder="Nhập tên của bạn" 
-                                class="w-full bg-charcoal border border-gray-600 rounded-brand py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all">
+                    <div class="form-group">
+                        <label>Họ và Tên</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="user"></i>
+                            <input type="text" name="Name" required placeholder="Nhập tên của bạn" class="form-input">
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Phone -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Số điện thoại</label>
-                            <div class="relative">
-                                <i data-lucide="phone" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                                <input type="tel" name="Phone" required placeholder="0912..." 
-                                    class="w-full bg-charcoal border border-gray-600 rounded-brand py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all">
+                    <!-- Phone & Email Row -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Số điện thoại</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="phone"></i>
+                                <input type="tel" name="Phone" required placeholder="0912..." class="form-input">
                             </div>
                         </div>
-                        <!-- Email -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-300 mb-2">Email</label>
-                            <div class="relative">
-                                <i data-lucide="mail" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                                <input type="email" name="Mail" required placeholder="email@example.com" 
-                                    class="w-full bg-charcoal border border-gray-600 rounded-brand py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <div class="input-wrapper">
+                                <i data-lucide="mail"></i>
+                                <input type="email" name="Mail" required placeholder="email@example.com" class="form-input">
                             </div>
                         </div>
                     </div>
 
-                    <!-- Request/Question -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Yêu cầu hoặc câu hỏi</label>
-                        <div class="relative">
-                            <i data-lucide="message-square" class="absolute left-3 top-3 w-5 h-5 text-gray-500"></i>
-                            <textarea name="Yêu cầu" rows="3" required placeholder="Bạn đang gặp vấn đề gì về Marketing/AI?" 
-                                class="w-full bg-charcoal border border-gray-600 rounded-brand py-3 pl-10 pr-4 text-white placeholder-gray-500 focus:outline-none focus:border-red focus:ring-1 focus:ring-red transition-all"></textarea>
+                    <!-- Message -->
+                    <div class="form-group">
+                        <label>Yêu cầu hoặc câu hỏi</label>
+                        <div class="input-wrapper">
+                            <i data-lucide="message-square"></i>
+                            <textarea name="Yêu cầu" rows="3" required placeholder="Bạn đang gặp vấn đề gì về Marketing/AI?" class="form-input"></textarea>
                         </div>
                     </div>
 
-                    <!-- Select Option -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-300 mb-2">Bạn muốn câu trả lời ra sao?</label>
-                        <div class="relative">
-                            <i data-lucide="check-circle" class="absolute left-3 top-3.5 w-5 h-5 text-gray-500"></i>
-                            <select name="Loại phản hồi" class="w-full bg-charcoal border border-gray-600 rounded-brand py-3 pl-10 pr-10 text-white appearance-none focus:outline-none focus:border-red focus:ring-1 focus:ring-red cursor-pointer transition-all">
+                    <!-- Select -->
+                    <div class="form-group">
+                        <label>Bạn muốn câu trả lời ra sao?</label>
+                        <div class="input-wrapper select-wrapper">
+                            <i data-lucide="check-circle"></i>
+                            <select name="Loại phản hồi" class="form-input">
                                 <option value="Email cơ bản">Trả lời email cơ bản về thắc mắc (Mặc định)</option>
                                 <option value="Nhanh 2h">Trả lời nhanh trong 2h (Zalo/FB/Tele)</option>
                                 <option value="Tư vấn chi tiết">Tư vấn chiến lược chi tiết</option>
                             </select>
-                            <i data-lucide="chevron-down" class="absolute right-3 top-3.5 w-5 h-5 text-gray-500 pointer-events-none"></i>
+                            <i data-lucide="chevron-down" class="chevron"></i>
                         </div>
                     </div>
 
-                    <!-- Submit Button -->
-                    <button type="submit" id="submitBtn" class="w-full bg-red hover:bg-red/90 text-white font-bold py-4 rounded-brand shadow-lg transform transition hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2">
+                    <!-- Submit -->
+                    <button type="submit" id="submitBtn" class="submit-btn">
                         <span>Gửi Thông Tin</span>
-                        <i data-lucide="send" class="w-5 h-5"></i>
+                        <i data-lucide="send"></i>
                     </button>
-                    
-                    <p class="text-xs text-center text-gray-500 mt-4">*Dữ liệu được bảo mật và xử lý tự động bởi hệ thống.</p>
+
+                    <p class="form-note">*Dữ liệu được bảo mật và xử lý tự động bởi hệ thống.</p>
                 </form>
 
-                <!-- Success Message (Hidden by default) -->
-                <div id="successMessage" class="hidden absolute inset-0 bg-charcoal-light flex-col items-center justify-center text-center p-8 z-20">
-                    <div class="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mb-6">
-                        <i data-lucide="check" class="w-10 h-10 text-green-500"></i>
+                <!-- Success Message -->
+                <div id="successMessage" class="success-message">
+                    <div class="success-icon">
+                        <i data-lucide="check"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-2">Đã gửi thành công!</h3>
-                    <p class="text-gray-400 mb-6">Hệ thống đã nhận được thông tin. <br>Bình Vương AI đang xử lý yêu cầu của bạn.</p>
-                    <button onclick="resetForm()" class="px-6 py-2 border border-gray-600 text-white rounded-brand hover:bg-gray-700 transition">Gửi câu hỏi khác</button>
+                    <h3>Đã gửi thành công!</h3>
+                    <p>Hệ thống đã nhận được thông tin.<br>Bình Vương AI đang xử lý yêu cầu của bạn.</p>
+                    <button onclick="resetForm()" class="reset-btn">Gửi câu hỏi khác</button>
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-charcoal border-t border-gray-800 py-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="flex justify-center items-center gap-3 mb-6">
-                <div class="w-8 h-8 rounded-full border border-red flex items-center justify-center">
-                    <div class="w-4 h-4 rounded-full bg-red"></div>
-                </div>
-                <span class="font-bold text-xl text-white">Bình Vương AI</span>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-logo">
+            <div class="footer-logo-icon">
+                <div></div>
             </div>
-            <p class="text-gray-500 text-sm mb-6">Chia sẻ kiến thức Marketing, Automation và AI thực chiến.</p>
-            <div class="flex justify-center gap-6 mb-8">
-                <a href="#" class="text-gray-400 hover:text-red transition"><i data-lucide="facebook"></i></a>
-                <a href="#" class="text-gray-400 hover:text-red transition"><i data-lucide="youtube"></i></a>
-                <a href="#" class="text-gray-400 hover:text-red transition"><i data-lucide="linkedin"></i></a>
-            </div>
-            <div class="text-xs text-gray-600">
-                <p>&copy; 2025 Bình Vương. All rights reserved.</p>
-            </div>
+            <span>Bình Vương AI</span>
         </div>
+        <p>Chia sẻ kiến thức Marketing, Automation và AI thực chiến.</p>
+        <div class="footer-socials">
+            <a href="#"><i data-lucide="facebook"></i></a>
+            <a href="#"><i data-lucide="youtube"></i></a>
+            <a href="#"><i data-lucide="linkedin"></i></a>
+        </div>
+        <p class="footer-copyright">&copy; 2025 Bình Vương. All rights reserved.</p>
     </footer>
 
-    <!-- Scripts -->
-    <script>
-        // Init Icons
-        lucide.createIcons();
+    <!-- JavaScript -->
+    <script is:inline>
+        // Initialize Lucide Icons
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
 
         // Form Handling
         const form = document.getElementById('bvForm');
@@ -366,13 +963,15 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
         form.addEventListener('submit', function(e) {
             e.preventDefault();
 
-            // Loading state
+            // Save original button content
             const originalBtnContent = submitBtn.innerHTML;
+            
+            // Loading state
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<div class="loader"></div>';
-            submitBtn.classList.add('opacity-70', 'cursor-not-allowed');
+            submitBtn.style.opacity = '0.7';
 
-            // Gather Data
+            // Gather form data
             const formData = new FormData(form);
             const data = {};
             formData.forEach((value, key) => data[key] = value);
@@ -380,41 +979,33 @@ import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
             // Webhook URL
             const webhookUrl = 'https://auto.ngay.net/webhook-test/binhvuongai';
 
-            // Send Data
+            // Send data
             fetch(webhookUrl, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data),
             })
-            .then(response => {
-                // Giả lập thành công ngay cả khi CORS chặn (vì đây là webhook test)
-                // Trong thực tế, server cần cấu hình Access-Control-Allow-Origin
-                showSuccess();
-            })
+            .then(() => showSuccess())
             .catch((error) => {
                 console.error('Error:', error);
-                // Vẫn hiện success để trải nghiệm người dùng không bị gián đoạn 
-                // (do webhook test thường không trả về headers CORS chuẩn cho trình duyệt)
-                showSuccess(); 
+                showSuccess();
             })
             .finally(() => {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = originalBtnContent;
-                submitBtn.classList.remove('opacity-70', 'cursor-not-allowed');
+                submitBtn.style.opacity = '1';
+                lucide.createIcons();
             });
         });
 
         function showSuccess() {
-            successMessage.classList.remove('hidden');
-            successMessage.classList.add('flex');
+            successMessage.classList.add('show');
+            lucide.createIcons();
         }
 
         function resetForm() {
             form.reset();
-            successMessage.classList.add('hidden');
-            successMessage.classList.remove('flex');
+            successMessage.classList.remove('show');
         }
     </script>
 </body>
