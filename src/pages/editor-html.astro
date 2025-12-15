@@ -1,9 +1,9 @@
 ---
-// HTML Editor - Standalone page
+// HTML Editor - Fixed version with dark mode default
 ---
 
 <!DOCTYPE html>
-<html lang="vi" class="">
+<html lang="vi" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -86,7 +86,7 @@
             height: 48px;
             margin-bottom: 24px;
         }
-        body.dark .upload-logo { filter: invert(1) brightness(2); }
+        /* Giữ nguyên logo, không invert */
         
         .upload-title {
             font-size: 28px;
@@ -163,7 +163,7 @@
         .logo-img {
             height: 28px;
         }
-        body.dark .logo-img { filter: invert(1) brightness(2); }
+        /* Giữ nguyên logo, không invert */
         .logo-text {
             font-weight: 700;
             font-size: 15px;
@@ -250,10 +250,25 @@
         .panel-left {
             width: 260px;
             border-right: 1px solid #e5e7eb;
+            flex-shrink: 0;
         }
         .panel-right {
             width: 320px;
             border-left: 1px solid #e5e7eb;
+            flex-shrink: 0;
+        }
+        
+        /* Dark mode panels - tuân thủ guideline */
+        body.dark .panel-left,
+        body.dark .panel-right {
+            background: var(--box-dark);
+            border-color: #3f3f46;
+        }
+        body.dark .panel-left {
+            border-right-color: #3f3f46;
+        }
+        body.dark .panel-right {
+            border-left-color: #3f3f46;
         }
         .panel-header {
             padding: 14px 16px;
@@ -263,13 +278,27 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: var(--box-light);
+        }
+        body.dark .panel-header {
+            background: var(--charcoal);
+            border-bottom-color: #3f3f46;
+            color: var(--neutral);
         }
         .panel-header-title {
             display: flex;
             align-items: center;
             gap: 8px;
         }
-        .panel-body { flex: 1; overflow-y: auto; }
+        .panel-body { 
+            flex: 1; 
+            overflow-y: auto;
+            background: var(--white);
+        }
+        body.dark .panel-body {
+            background: var(--box-dark);
+            color: var(--neutral);
+        }
         
         /* Canvas */
         .canvas-area {
@@ -310,8 +339,13 @@
             gap: 8px;
             margin-bottom: 2px;
             transition: var(--transition);
+            color: var(--charcoal);
+        }
+        body.dark .layer-item {
+            color: var(--neutral);
         }
         .layer-item:hover { background: rgba(218,37,29,0.05); }
+        body.dark .layer-item:hover { background: rgba(218,37,29,0.15); }
         .layer-item.selected { background: rgba(218,37,29,0.1); color: var(--red); }
         .layer-item.selected .layer-tag { color: var(--red); }
         .layer-tag { 
@@ -377,7 +411,10 @@
             align-items: center;
             gap: 6px;
         }
-        body.dark .prop-group-title { border-color: #3f3f46; }
+        body.dark .prop-group-title { 
+            border-color: #3f3f46; 
+            color: #9ca3af;
+        }
         .prop-row { margin-bottom: 12px; }
         .prop-label { 
             font-size: 12px; 
@@ -385,6 +422,9 @@
             margin-bottom: 6px; 
             display: block;
             font-weight: 500;
+        }
+        body.dark .prop-label {
+            color: #9ca3af;
         }
         .prop-input {
             width: 100%;
@@ -567,6 +607,9 @@
             padding: 40px 20px; 
             color: var(--gray);
         }
+        body.dark .no-selection {
+            color: #9ca3af;
+        }
         .no-selection-icon { 
             font-size: 40px; 
             margin-bottom: 12px; 
@@ -679,8 +722,12 @@
         .search-box {
             padding: 12px;
             border-bottom: 1px solid #e5e7eb;
+            background: var(--white);
         }
-        body.dark .search-box { border-color: #3f3f46; }
+        body.dark .search-box { 
+            border-color: #3f3f46; 
+            background: var(--box-dark);
+        }
         .search-input {
             width: 100%;
             padding: 8px 12px;
@@ -705,7 +752,7 @@
         body.dark .shortcut { background: var(--charcoal); }
     </style>
 </head>
-<body>
+<body class="dark">
     <!-- UPLOAD SCREEN -->
     <div class="upload-screen" id="uploadScreen">
         <img src="https://binhvuong.vn/wp-content/uploads/2025/10/BinhvuongAImarketingdedang.webp" alt="Logo" class="upload-logo">
@@ -1670,10 +1717,18 @@
             localStorage.setItem('bv_theme', isDark ? 'dark' : 'light');
         });
         
-        // Load saved theme
-        if (localStorage.getItem('bv_theme') === 'dark') {
+        // Load saved theme - mặc định dark mode
+        const savedTheme = localStorage.getItem('bv_theme');
+        if (savedTheme === 'light') {
+            document.body.classList.remove('dark');
+            $('#themeToggle').textContent = '🌙';
+        } else {
+            // Mặc định dark mode
             document.body.classList.add('dark');
             $('#themeToggle').textContent = '☀️';
+            if (!savedTheme) {
+                localStorage.setItem('bv_theme', 'dark');
+            }
         }
         
         // ===== CODE VIEW MODAL =====
