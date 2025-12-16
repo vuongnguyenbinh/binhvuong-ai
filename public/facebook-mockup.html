@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook Ad Mockup - Bình Vương AI</title>
+    <link rel="icon" href="https://binhvuong.vn/wp-content/uploads/2025/10/BinhvuongAImarketingdedang.webp">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <!-- html2canvas -->
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    
+    <style>
+        :root {
+            /* Brand Colors */
+            --red: #DA251D;
+            --charcoal: #1E1E2A;
+            --neutral: #F2F2F7;
+            --white: #FFFFFF;
+            --box-dark: #27272A;
+            
+            /* Gray Scale */
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-300: #d1d5db;
+            --gray-400: #9ca3af;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            
+            /* Facebook Colors */
+            --fb-bg: #F0F2F5;
+            --fb-card: #FFFFFF;
+            --fb-text: #050505;
+            --fb-secondary: #65676B;
+            --fb-button: #E4E6EB;
+            
+            /* UI */
+            --radius: 8px;
+            --radius-lg: 12px;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--neutral);
+            color: var(--charcoal);
+            line-height: 1.5;
+            min-height: 100vh;
+        }
+        
+        /* Dark Mode */
+        body.dark {
+            background: var(--charcoal);
+            color: var(--neutral);
+        }
+        
+        body.dark .card {
+            background: var(--box-dark);
+            border-color: #3f3f46;
+        }
+        
+        body.dark .input,
+        body.dark .textarea,
+        body.dark select {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+            color: var(--neutral);
+        }
+        
+        body.dark .label {
+            color: var(--gray-400);
+        }
+        
+        body.dark .preview-area {
+            background: #18181b;
+        }
+        
+        body.dark .format-btn {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+            color: var(--gray-400);
+        }
+        
+        body.dark .upload-zone {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+        }
+        
+        /* Layout */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding-bottom: 24px;
+            margin-bottom: 32px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+        
+        body.dark .header {
+            border-color: #3f3f46;
+        }
+        
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--white);
+        }
+        
+        .logo-icon-inner {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+        
+        .logo-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--charcoal);
+        }
+        
+        body.dark .logo-text h1 {
+            color: var(--white);
+        }
+        
+        .logo-text p {
+            font-size: 13px;
+            color: var(--gray-500);
+        }
+        
+        .header-controls {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        
+        .toggle-group {
+            display: flex;
+            background: var(--white);
+            border-radius: var(--radius);
+            padding: 4px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-200);
+        }
+        
+        body.dark .toggle-group {
+            background: var(--box-dark);
+            border-color: #3f3f46;
+        }
+        
+        .toggle-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--gray-500);
+            transition: all 0.2s;
+        }
+        
+        .toggle-btn.active {
+            background: var(--red);
+            color: var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .toggle-btn.active-dark {
+            background: var(--charcoal);
+            color: var(--white);
+        }
+        
+        body.dark .toggle-btn.active-dark {
+            background: var(--gray-700);
+        }
+        
+        .theme-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+            background: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--charcoal);
+            transition: all 0.2s;
+        }
+        
+        body.dark .theme-btn {
+            background: var(--box-dark);
+            border-color: #3f3f46;
+            color: var(--neutral);
+        }
+        
+        .theme-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        
+        /* Main Grid */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 32px;
+        }
+        
+        @media (min-width: 1024px) {
+            .main-grid {
+                grid-template-columns: 420px 1fr;
+            }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--gray-100);
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--charcoal);
+        }
+        
+        body.dark .card-title {
+            color: var(--white);
+        }
+        
+        .card-title i {
+            color: var(--red);
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .label {
+            display: block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-500);
+            margin-bottom: 6px;
+        }
+        
+        .input,
+        .textarea,
+        select {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: var(--white);
+            color: var(--charcoal);
+        }
+        
+        .input:focus,
+        .textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(218, 37, 29, 0.1);
+        }
+        
+        .textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .row {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        /* Format Buttons */
+        .format-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .format-btn {
+            padding: 16px 12px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            background: var(--white);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        
+        .format-btn:hover {
+            border-color: var(--gray-300);
+            background: var(--gray-50);
+        }
+        
+        .format-btn.active {
+            border-color: var(--red);
+            background: rgba(218, 37, 29, 0.05);
+            color: var(--red);
+        }
+        
+        .format-btn i {
+            margin-bottom: 8px;
+        }
+        
+        .format-btn span {
+            display: block;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--gray-50);
+            position: relative;
+        }
+        
+        .upload-zone:hover {
+            border-color: var(--red);
+            background: rgba(218, 37, 29, 0.02);
+        }
+        
+        .upload-zone input {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .upload-zone i {
+            color: var(--gray-400);
+            margin-bottom: 8px;
+        }
+        
+        .upload-zone p {
+            font-size: 12px;
+            color: var(--gray-500);
+        }
+        
+        .upload-preview {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: var(--radius);
+        }
+        
+        /* Download Button */
+        .download-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: var(--red);
+            color: var(--white);
+            border: none;
+            border-radius: var(--radius);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(218, 37, 29, 0.3);
+        }
+        
+        .download-btn:hover {
+            background: #c41f18;
+            transform: translateY(-1px);
+        }
+        
+        .download-btn:active {
+            transform: translateY(0);
+        }
+        
+        .download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Preview Area */
+        .preview-area {
+            background: var(--fb-bg);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid var(--gray-200);
+        }
+        
+        .preview-label {
+            background: rgba(255,255,255,0.9);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Facebook Card Preview */
+        .fb-card {
+            background: var(--fb-card);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 375px;
+            max-width: 100%;
+            transition: width 0.3s;
+        }
+        
+        .fb-card.desktop {
+            width: 500px;
+        }
+        
+        .fb-header {
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .fb-header-left {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .fb-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gray-200);
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fb-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .fb-avatar-placeholder {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fb-avatar-placeholder-inner {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+        
+        .fb-page-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--fb-text);
+        }
+        
+        .fb-sponsored {
+            font-size: 12px;
+            color: var(--fb-secondary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 2px;
+        }
+        
+        .fb-more {
+            color: var(--fb-secondary);
+            cursor: pointer;
+        }
+        
+        .fb-content {
+            padding: 0 12px 12px;
+            font-size: 15px;
+            color: var(--fb-text);
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+        
+        .fb-image {
+            width: 100%;
+            background: var(--gray-100);
+            position: relative;
+        }
+        
+        .fb-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+            max-height: 500px;
+            object-fit: cover;
+        }
+        
+        .fb-image-placeholder {
+            aspect-ratio: 1200/628;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray-400);
+            background: var(--gray-50);
+        }
+        
+        .fb-image-placeholder i {
+            opacity: 0.3;
+            margin-bottom: 8px;
+        }
+        
+        .fb-image-placeholder span {
+            font-size: 12px;
+        }
+        
+        .fb-cta-section {
+            background: var(--fb-bg);
+            padding: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .fb-cta-info {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        .fb-cta-url {
+            font-size: 11px;
+            color: var(--fb-secondary);
+            text-transform: uppercase;
+            margin-bottom: 2px;
+        }
+        
+        .fb-cta-headline {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--fb-text);
+            line-height: 1.3;
+        }
+        
+        .fb-cta-desc {
+            font-size: 12px;
+            color: var(--fb-secondary);
+            margin-top: 2px;
+        }
+        
+        .fb-cta-btn {
+            background: var(--fb-button);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--fb-text);
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .fb-engagement {
+            padding: 8px 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+        
+        .fb-reactions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            color: var(--fb-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .fb-reactions-left {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .fb-reaction-icon {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--red);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .fb-actions {
+            display: flex;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 8px;
+        }
+        
+        .fb-action-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px;
+            border: none;
+            background: transparent;
+            color: var(--fb-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        
+        .fb-action-btn:hover {
+            background: var(--gray-100);
+        }
+        
+        /* Carousel */
+        .fb-carousel {
+            display: flex;
+            gap: 10px;
+            padding: 0 12px 12px;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+        }
+        
+        .fb-carousel::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .carousel-card {
+            width: 240px;
+            flex-shrink: 0;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: white;
+            scroll-snap-align: start;
+        }
+        
+        .carousel-card-image {
+            aspect-ratio: 1;
+            background: var(--gray-100);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-card-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .carousel-card-content {
+            padding: 12px;
+        }
+        
+        .carousel-card-url {
+            font-size: 11px;
+            color: var(--fb-secondary);
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        
+        .carousel-card-headline {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--fb-text);
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        
+        .carousel-card-desc {
+            font-size: 12px;
+            color: var(--fb-secondary);
+            margin-bottom: 10px;
+        }
+        
+        .carousel-card-btn {
+            width: 100%;
+            padding: 8px;
+            background: var(--fb-button);
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--fb-text);
+            cursor: pointer;
+        }
+        
+        /* Carousel Controls */
+        .carousel-controls {
+            margin-top: 12px;
+        }
+        
+        .carousel-item {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+        
+        body.dark .carousel-item {
+            background: var(--charcoal);
+            border-color: #3f3f46;
+        }
+        
+        .carousel-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .carousel-item-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--gray-600);
+        }
+        
+        body.dark .carousel-item-title {
+            color: var(--gray-400);
+        }
+        
+        .carousel-item-remove {
+            background: transparent;
+            border: none;
+            color: var(--red);
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .add-carousel-btn {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            background: transparent;
+            color: var(--gray-500);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+        
+        .add-carousel-btn:hover {
+            border-color: var(--red);
+            color: var(--red);
+        }
+        
+        /* Album */
+        .album-grid {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .album-grid-1 img {
+            width: 100%;
+            height: auto;
+        }
+        
+        .album-grid-2 {
+            height: 280px;
+        }
+        
+        .album-grid-2 img {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .album-grid-3 {
+            height: 320px;
+        }
+        
+        .album-main {
+            width: 66%;
+            height: 100%;
+        }
+        
+        .album-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .album-side {
+            width: 34%;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        
+        .album-side img {
+            width: 100%;
+            height: 50%;
+            object-fit: cover;
+        }
+        
+        .album-images-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        
+        .album-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .album-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .album-thumb-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            width: 18px;
+            height: 18px;
+            background: rgba(0,0,0,0.6);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        /* Section Divider */
+        .section-divider {
+            border-top: 1px solid var(--gray-200);
+            margin: 16px 0;
+            padding-top: 16px;
+        }
+        
+        body.dark .section-divider {
+            border-color: #3f3f46;
+        }
+        
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--charcoal);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        body.dark .section-title {
+            color: var(--neutral);
+        }
+        
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--red);
+        }
+        
+        /* Footer */
+        .preview-footer {
+            margin-top: 24px;
+            text-align: center;
+        }
+        
+        .preview-badge {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(218, 37, 29, 0.1);
+            color: var(--red);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .preview-note {
+            font-size: 12px;
+            color: var(--gray-400);
+            font-style: italic;
+        }
+        
+        /* Responsive */
+        @media (max-width: 640px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .fb-card,
+            .fb-card.desktop {
+                width: 100%;
+            }
+            
+            .format-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-area">
+                <div class="logo-icon">
+                    <div class="logo-icon-inner"></div>
+                </div>
+                <div class="logo-text">
+                    <h1>Bình Vương AI</h1>
+                    <p>AI Marketing Dễ Dàng</p>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <div class="toggle-group">
+                    <button class="toggle-btn active" id="mobileBtn" onclick="setDevice('mobile')">
+                        <i data-lucide="smartphone" style="width:16px;height:16px"></i>
+                        <span>Mobile</span>
+                    </button>
+                    <button class="toggle-btn" id="desktopBtn" onclick="setDevice('desktop')">
+                        <i data-lucide="monitor" style="width:16px;height:16px"></i>
+                        <span>Desktop</span>
+                    </button>
+                </div>
+                
+                <button class="theme-btn" onclick="toggleTheme()" title="Đổi theme">
+                    <i data-lucide="moon" id="themeIcon" style="width:18px;height:18px"></i>
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <div class="main-grid">
+            <!-- Left: Controls -->
+            <div class="controls-column">
+                <!-- Format Selector -->
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="label">Chọn định dạng quảng cáo</div>
+                    <div class="format-grid">
+                        <button class="format-btn active" id="formatSingle" onclick="setFormat('single')">
+                            <i data-lucide="image" style="width:24px;height:24px"></i>
+                            <span>Một hình ảnh</span>
+                        </button>
+                        <button class="format-btn" id="formatCarousel" onclick="setFormat('carousel')">
+                            <i data-lucide="layers" style="width:24px;height:24px"></i>
+                            <span>Băng chuyền</span>
+                        </button>
+                        <button class="format-btn" id="formatAlbum" onclick="setFormat('album')">
+                            <i data-lucide="layout-grid" style="width:24px;height:24px"></i>
+                            <span>Bộ sưu tập</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Main Info -->
+                <div class="card" style="position: relative; overflow: hidden; margin-bottom: 20px;">
+                    <div style="position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--red);"></div>
+                    
+                    <div class="card-title">
+                        <i data-lucide="zap" style="width:20px;height:20px"></i>
+                        Thông tin chiến dịch
+                    </div>
+                    
+                    <div class="row" style="margin-bottom: 16px;">
+                        <div class="col">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="label">Tên Fanpage</label>
+                                <input type="text" class="input" id="pageName" value="Bình Vương AI Marketing" oninput="updatePreview()">
+                            </div>
+                        </div>
+                        <div style="width: 120px;">
+                            <label class="label">Avatar</label>
+                            <div class="upload-zone" style="padding: 10px;">
+                                <input type="file" accept="image/*" onchange="uploadAvatar(event)">
+                                <span style="font-size: 12px;">Upload</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="label">Nội dung chính (Primary Text)</label>
+                        <textarea class="textarea" id="primaryText" oninput="updatePreview()">Simple but Optimal - Đơn giản nhưng Tối ưu.
+
+Giúp doanh nghiệp vận hành marketing dễ dàng và hiệu quả bằng sức mạnh của AI và Automation. 🚀</textarea>
+                    </div>
+                    
+                    <!-- Single Image Options -->
+                    <div id="singleOptions">
+                        <div class="section-divider">
+                            <div class="section-title">Cấu hình Single Image</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="label">Hình ảnh quảng cáo</label>
+                            <div class="upload-zone" id="singleImageZone">
+                                <input type="file" accept="image/*" onchange="uploadSingleImage(event)">
+                                <i data-lucide="upload" style="width:24px;height:24px"></i>
+                                <p>Kéo thả hoặc click để upload (1200x628px)</p>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="label">Tiêu đề (Headline)</label>
+                                    <input type="text" class="input" id="headline" value="Bình Vương - AI Marketing Dễ Dàng" oninput="updatePreview()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="label">Mô tả</label>
+                                    <input type="text" class="input" id="description" value="binhvuong.vn" oninput="updatePreview()">
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label class="label">Website URL</label>
+                                    <input type="text" class="input" id="websiteUrl" value="BINHVUONG.VN" oninput="updatePreview()">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="label">Nút CTA</label>
+                            <select class="input" id="ctaText" onchange="updatePreview()">
+                                <option value="Gửi tin nhắn">Gửi tin nhắn</option>
+                                <option value="Mua ngay">Mua ngay</option>
+                                <option value="Đăng ký">Đăng ký</option>
+                                <option value="Xem thêm">Xem thêm</option>
+                                <option value="Tải xuống">Tải xuống</option>
+                                <option value="Liên hệ">Liên hệ</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel Options -->
+                    <div id="carouselOptions" class="hidden">
+                        <div class="section-divider">
+                            <div class="section-title">Cấu hình Carousel</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="label">Nút CTA</label>
+                            <select class="input" id="carouselCta" onchange="updatePreview()">
+                                <option value="Gửi tin nhắn">Gửi tin nhắn</option>
+                                <option value="Mua ngay">Mua ngay</option>
+                                <option value="Đăng ký">Đăng ký</option>
+                                <option value="Xem thêm">Xem thêm</option>
+                            </select>
+                        </div>
+                        
+                        <div class="carousel-controls" id="carouselControls">
+                            <!-- Carousel cards will be added here -->
+                        </div>
+                        
+                        <button class="add-carousel-btn" onclick="addCarouselCard()">
+                            <i data-lucide="plus" style="width:16px;height:16px"></i>
+                            Thêm thẻ mới
+                        </button>
+                    </div>
+                    
+                    <!-- Album Options -->
+                    <div id="albumOptions" class="hidden">
+                        <div class="section-divider">
+                            <div class="section-title">Cấu hình Album (Tối đa 5 ảnh)</div>
+                        </div>
+                        
+                        <div class="upload-zone">
+                            <input type="file" accept="image/*" multiple onchange="uploadAlbumImages(event)">
+                            <i data-lucide="images" style="width:24px;height:24px"></i>
+                            <p>Upload nhiều ảnh cùng lúc</p>
+                        </div>
+                        
+                        <div class="album-images-list" id="albumImagesList"></div>
+                    </div>
+                </div>
+                
+                <!-- Download Button -->
+                <button class="download-btn" onclick="downloadImage()" id="downloadBtn">
+                    <i data-lucide="download" style="width:20px;height:20px"></i>
+                    Tải hình ảnh demo xuống
+                </button>
+                
+                <p style="text-align: center; font-size: 12px; color: var(--gray-400); margin-top: 12px;">
+                    Bình Vương AI - Simple but Optimal
+                </p>
+            </div>
+            
+            <!-- Right: Preview -->
+            <div class="preview-area">
+                <div class="preview-label" id="previewLabel">Preview Mode: Mobile</div>
+                
+                <!-- Facebook Card -->
+                <div class="fb-card" id="fbCard">
+                    <!-- Header -->
+                    <div class="fb-header">
+                        <div class="fb-header-left">
+                            <div class="fb-avatar" id="fbAvatar">
+                                <div class="fb-avatar-placeholder">
+                                    <div class="fb-avatar-placeholder-inner"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="fb-page-name" id="fbPageName">Bình Vương AI Marketing</div>
+                                <div class="fb-sponsored">
+                                    <span>Được tài trợ</span>
+                                    <span>·</span>
+                                    <i data-lucide="globe" style="width:12px;height:12px"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="fb-more">
+                            <i data-lucide="more-horizontal" style="width:20px;height:20px"></i>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="fb-content" id="fbContent">Simple but Optimal - Đơn giản nhưng Tối ưu.
+
+Giúp doanh nghiệp vận hành marketing dễ dàng và hiệu quả bằng sức mạnh của AI và Automation. 🚀</div>
+                    
+                    <!-- Single Image -->
+                    <div id="fbSingleImage">
+                        <div class="fb-image">
+                            <div class="fb-image-placeholder" id="fbImagePlaceholder">
+                                <i data-lucide="image" style="width:48px;height:48px"></i>
+                                <span>1200 x 628 px</span>
+                            </div>
+                        </div>
+                        
+                        <div class="fb-cta-section">
+                            <div class="fb-cta-info">
+                                <div class="fb-cta-url" id="fbWebsiteUrl">BINHVUONG.VN</div>
+                                <div class="fb-cta-headline" id="fbHeadline">Bình Vương - AI Marketing Dễ Dàng</div>
+                                <div class="fb-cta-desc" id="fbDescription">binhvuong.vn</div>
+                            </div>
+                            <button class="fb-cta-btn" id="fbCtaBtn">Gửi tin nhắn</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Carousel -->
+                    <div id="fbCarousel" class="hidden">
+                        <div class="fb-carousel" id="fbCarouselInner">
+                            <!-- Carousel cards rendered here -->
+                        </div>
+                    </div>
+                    
+                    <!-- Album -->
+                    <div id="fbAlbum" class="hidden">
+                        <div class="fb-image">
+                            <div class="fb-image-placeholder" id="fbAlbumPlaceholder">
+                                <i data-lucide="images" style="width:48px;height:48px"></i>
+                                <span>Chưa có ảnh trong album</span>
+                            </div>
+                        </div>
+                        <div class="fb-cta-section">
+                            <div style="font-size: 12px; color: var(--fb-secondary);">Gửi tin nhắn cho trang</div>
+                            <button class="fb-cta-btn">Gửi tin nhắn</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Engagement -->
+                    <div class="fb-engagement">
+                        <div class="fb-reactions">
+                            <div class="fb-reactions-left">
+                                <div class="fb-reaction-icon">
+                                    <i data-lucide="thumbs-up" style="width:10px;height:10px"></i>
+                                </div>
+                                <span>1.2K</span>
+                            </div>
+                            <div>
+                                <span>45 bình luận</span>
+                                <span style="margin: 0 8px;">·</span>
+                                <span>12 chia sẻ</span>
+                            </div>
+                        </div>
+                        <div class="fb-actions">
+                            <button class="fb-action-btn">
+                                <i data-lucide="thumbs-up" style="width:18px;height:18px"></i>
+                                <span>Thích</span>
+                            </button>
+                            <button class="fb-action-btn">
+                                <i data-lucide="message-circle" style="width:18px;height:18px"></i>
+                                <span>Bình luận</span>
+                            </button>
+                            <button class="fb-action-btn">
+                                <i data-lucide="share-2" style="width:18px;height:18px"></i>
+                                <span>Chia sẻ</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="preview-footer">
+                    <div class="preview-badge">Bình Vương AI Marketing</div>
+                    <p class="preview-note">*Hình ảnh demo được tạo tự động</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // State
+        let state = {
+            device: 'mobile',
+            format: 'single',
+            theme: 'light',
+            avatar: null,
+            singleImage: null,
+            carouselCards: [
+                { id: 1, image: null, headline: 'Tự động hóa', description: 'Tiết kiệm 10h/tuần', url: 'BINHVUONG.VN' },
+                { id: 2, image: null, headline: 'Tối ưu quảng cáo', description: 'Tăng hiệu quả X3', url: 'BINHVUONG.VN' },
+                { id: 3, image: null, headline: 'Quy trình chuẩn', description: 'Dễ dàng áp dụng', url: 'BINHVUONG.VN' }
+            ],
+            albumImages: []
+        };
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderCarouselControls();
+            
+            // Check saved theme
+            const savedTheme = localStorage.getItem('fb_mockup_theme');
+            if (savedTheme === 'dark') {
+                toggleTheme();
+            }
+        });
+        
+        // Theme Toggle
+        function toggleTheme() {
+            state.theme = state.theme === 'light' ? 'dark' : 'light';
+            document.body.classList.toggle('dark');
+            
+            const icon = document.getElementById('themeIcon');
+            icon.setAttribute('data-lucide', state.theme === 'dark' ? 'sun' : 'moon');
+            lucide.createIcons();
+            
+            localStorage.setItem('fb_mockup_theme', state.theme);
+        }
+        
+        // Device Toggle
+        function setDevice(device) {
+            state.device = device;
+            
+            document.getElementById('mobileBtn').classList.toggle('active', device === 'mobile');
+            document.getElementById('desktopBtn').classList.toggle('active', device === 'desktop');
+            document.getElementById('desktopBtn').classList.toggle('active-dark', device === 'desktop');
+            
+            document.getElementById('fbCard').classList.toggle('desktop', device === 'desktop');
+            document.getElementById('previewLabel').textContent = `Preview Mode: ${device === 'mobile' ? 'Mobile' : 'Desktop'}`;
+        }
+        
+        // Format Toggle
+        function setFormat(format) {
+            state.format = format;
+            
+            // Update buttons
+            document.querySelectorAll('.format-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`format${format.charAt(0).toUpperCase() + format.slice(1)}`).classList.add('active');
+            
+            // Show/hide options
+            document.getElementById('singleOptions').classList.toggle('hidden', format !== 'single');
+            document.getElementById('carouselOptions').classList.toggle('hidden', format !== 'carousel');
+            document.getElementById('albumOptions').classList.toggle('hidden', format !== 'album');
+            
+            // Show/hide preview sections
+            document.getElementById('fbSingleImage').classList.toggle('hidden', format !== 'single');
+            document.getElementById('fbCarousel').classList.toggle('hidden', format !== 'carousel');
+            document.getElementById('fbAlbum').classList.toggle('hidden', format !== 'album');
+            
+            if (format === 'carousel') {
+                renderCarouselPreview();
+            }
+        }
+        
+        // Update Preview
+        function updatePreview() {
+            document.getElementById('fbPageName').textContent = document.getElementById('pageName').value || 'Tên Trang';
+            document.getElementById('fbContent').textContent = document.getElementById('primaryText').value || 'Nội dung quảng cáo...';
+            document.getElementById('fbHeadline').textContent = document.getElementById('headline').value || 'Tiêu đề';
+            document.getElementById('fbDescription').textContent = document.getElementById('description').value || '';
+            document.getElementById('fbWebsiteUrl').textContent = document.getElementById('websiteUrl').value || 'WEBSITE.COM';
+            document.getElementById('fbCtaBtn').textContent = document.getElementById('ctaText').value;
+            
+            if (state.format === 'carousel') {
+                renderCarouselPreview();
+            }
+        }
+        
+        // Upload Avatar
+        function uploadAvatar(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                state.avatar = url;
+                document.getElementById('fbAvatar').innerHTML = `<img src="${url}" alt="Avatar">`;
+            }
+        }
+        
+        // Upload Single Image
+        function uploadSingleImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                state.singleImage = url;
+                document.getElementById('fbImagePlaceholder').innerHTML = `<img src="${url}" style="width:100%;height:auto;display:block;">`;
+                document.getElementById('singleImageZone').innerHTML = `
+                    <input type="file" accept="image/*" onchange="uploadSingleImage(event)">
+                    <img src="${url}" class="upload-preview">
+                `;
+            }
+        }
+        
+        // Carousel Functions
+        function renderCarouselControls() {
+            const container = document.getElementById('carouselControls');
+            container.innerHTML = state.carouselCards.map((card, idx) => `
+                <div class="carousel-item">
+                    <div class="carousel-item-header">
+                        <span class="carousel-item-title">Thẻ ${idx + 1}</span>
+                        ${state.carouselCards.length > 1 ? `
+                            <button class="carousel-item-remove" onclick="removeCarouselCard(${card.id})">
+                                <i data-lucide="trash-2" style="width:14px;height:14px"></i>
+                            </button>
+                        ` : ''}
+                    </div>
+                    <div class="upload-zone" style="margin-bottom: 10px; padding: 12px;" id="carouselImage${card.id}">
+                        <input type="file" accept="image/*" onchange="uploadCarouselImage(${card.id}, event)">
+                        ${card.image ? `<img src="${card.image}" class="upload-preview">` : `
+                            <i data-lucide="image" style="width:20px;height:20px"></i>
+                            <p style="font-size: 11px;">Upload ảnh</p>
+                        `}
+                    </div>
+                    <input type="text" class="input" value="${card.headline}" placeholder="Tiêu đề" 
+                           oninput="updateCarouselCard(${card.id}, 'headline', this.value)" style="margin-bottom: 8px; font-size: 13px;">
+                    <input type="text" class="input" value="${card.description}" placeholder="Mô tả" 
+                           oninput="updateCarouselCard(${card.id}, 'description', this.value)" style="font-size: 13px;">
+                </div>
+            `).join('');
+            
+            lucide.createIcons();
+        }
+        
+        function uploadCarouselImage(id, event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                const card = state.carouselCards.find(c => c.id === id);
+                if (card) {
+                    card.image = url;
+                    renderCarouselControls();
+                    renderCarouselPreview();
+                }
+            }
+        }
+        
+        function updateCarouselCard(id, field, value) {
+            const card = state.carouselCards.find(c => c.id === id);
+            if (card) {
+                card[field] = value;
+                renderCarouselPreview();
+            }
+        }
+        
+        function addCarouselCard() {
+            const newId = Math.max(...state.carouselCards.map(c => c.id), 0) + 1;
+            state.carouselCards.push({
+                id: newId,
+                image: null,
+                headline: 'Tiêu đề mới',
+                description: 'Mô tả',
+                url: 'BINHVUONG.VN'
+            });
+            renderCarouselControls();
+            renderCarouselPreview();
+        }
+        
+        function removeCarouselCard(id) {
+            if (state.carouselCards.length <= 1) return;
+            state.carouselCards = state.carouselCards.filter(c => c.id !== id);
+            renderCarouselControls();
+            renderCarouselPreview();
+        }
+        
+        function renderCarouselPreview() {
+            const cta = document.getElementById('carouselCta')?.value || 'Gửi tin nhắn';
+            const container = document.getElementById('fbCarouselInner');
+            
+            container.innerHTML = state.carouselCards.map(card => `
+                <div class="carousel-card">
+                    <div class="carousel-card-image">
+                        ${card.image ? `<img src="${card.image}">` : `
+                            <i data-lucide="image" style="width:32px;height:32px;color:var(--gray-300)"></i>
+                        `}
+                    </div>
+                    <div class="carousel-card-content">
+                        <div class="carousel-card-url">${card.url}</div>
+                        <div class="carousel-card-headline">${card.headline}</div>
+                        <div class="carousel-card-desc">${card.description}</div>
+                        <button class="carousel-card-btn">${cta}</button>
+                    </div>
+                </div>
+            `).join('') + `
+                <div class="carousel-card" style="width: 100px; display: flex; align-items: center; justify-content: center; background: var(--gray-50);">
+                    <div style="text-align: center; padding: 12px;">
+                        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--gray-200); margin: 0 auto 8px;"></div>
+                        <span style="font-size: 11px; color: var(--gray-500);">Xem thêm</span>
+                    </div>
+                </div>
+            `;
+            
+            lucide.createIcons();
+        }
+        
+        // Album Functions
+        function uploadAlbumImages(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (state.albumImages.length < 5) {
+                    state.albumImages.push(URL.createObjectURL(file));
+                }
+            });
+            renderAlbumPreview();
+            renderAlbumThumbs();
+        }
+        
+        function removeAlbumImage(idx) {
+            state.albumImages.splice(idx, 1);
+            renderAlbumPreview();
+            renderAlbumThumbs();
+        }
+        
+        function renderAlbumThumbs() {
+            const container = document.getElementById('albumImagesList');
+            container.innerHTML = state.albumImages.map((img, idx) => `
+                <div class="album-thumb">
+                    <img src="${img}">
+                    <button class="album-thumb-remove" onclick="removeAlbumImage(${idx})">×</button>
+                </div>
+            `).join('');
+        }
+        
+        function renderAlbumPreview() {
+            const placeholder = document.getElementById('fbAlbumPlaceholder');
+            const count = state.albumImages.length;
+            
+            if (count === 0) {
+                placeholder.innerHTML = `
+                    <i data-lucide="images" style="width:48px;height:48px"></i>
+                    <span>Chưa có ảnh trong album</span>
+                `;
+                placeholder.className = 'fb-image-placeholder';
+            } else if (count === 1) {
+                placeholder.innerHTML = `<img src="${state.albumImages[0]}" style="width:100%;height:auto;">`;
+                placeholder.className = '';
+            } else if (count === 2) {
+                placeholder.innerHTML = `
+                    <div class="album-grid album-grid-2">
+                        <img src="${state.albumImages[0]}">
+                        <img src="${state.albumImages[1]}">
+                    </div>
+                `;
+                placeholder.className = '';
+            } else if (count >= 3) {
+                let html = `
+                    <div class="album-grid album-grid-3">
+                        <div class="album-main"><img src="${state.albumImages[0]}"></div>
+                        <div class="album-side">
+                            <img src="${state.albumImages[1]}">
+                            <div style="position: relative;">
+                                <img src="${state.albumImages[2]}">
+                                ${count > 3 ? `<div style="position:absolute;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:24px;font-weight:bold;">+${count - 3}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                placeholder.innerHTML = html;
+                placeholder.className = '';
+            }
+            
+            lucide.createIcons();
+        }
+        
+        // Download Image
+        async function downloadImage() {
+            const btn = document.getElementById('downloadBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i data-lucide="loader" style="width:20px;height:20px;animation:spin 1s linear infinite"></i> Đang xử lý...';
+            
+            try {
+                const element = document.getElementById('fbCard');
+                
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false,
+                    onclone: (clonedDoc) => {
+                        const el = clonedDoc.getElementById('fbCard');
+                        if (el) {
+                            el.style.boxShadow = 'none';
+                        }
+                    }
+                });
+                
+                const link = document.createElement('a');
+                link.download = `binhvuong-fb-${state.format}-${state.device}-${Date.now()}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                
+            } catch (err) {
+                console.error('Download error:', err);
+                alert('Có lỗi xảy ra. Vui lòng thử lại.');
+            }
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i data-lucide="download" style="width:20px;height:20px"></i> Tải hình ảnh demo xuống';
+            lucide.createIcons();
+        }
+        
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
