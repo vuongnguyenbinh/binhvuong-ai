@@ -41,15 +41,17 @@ export default function App() {
     albumImages: [] 
   });
 
-  // Load html2canvas
+  // Load dom-to-image-more (better modern CSS support)
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'https://html2canvas.hertzen.com/dist/html2canvas.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.5/dist/dom-to-image-more.min.js';
     script.async = true;
     script.onload = () => setLoadingLib(false);
     document.body.appendChild(script);
     return () => {
-      document.body.removeChild(script);
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
     };
   }, []);
 
@@ -120,106 +122,27 @@ export default function App() {
   };
 
   const handleDownload = async () => {
-    if (!window.html2canvas) {
+    if (!window.domtoimage) {
       alert("Đang tải thư viện, vui lòng thử lại sau giây lát...");
       return;
     }
 
     if (previewRef.current) {
       try {
-        window.scrollTo(0, 0); 
+        window.scrollTo(0, 0);
         
-        const canvas = await window.html2canvas(previewRef.current, {
-          scale: 2, 
-          useCORS: true,
-          backgroundColor: '#ffffff',
-          logging: false,
-          scrollY: -window.scrollY, 
-          windowWidth: document.documentElement.offsetWidth,
-          windowHeight: document.documentElement.offsetHeight,
-          onclone: (clonedDoc) => {
-            const element = clonedDoc.querySelector('[data-preview-container]');
-            if (element) {
-                element.style.overflow = 'visible'; 
-                element.style.height = 'auto';
-            }
-            
-            // Remove ALL stylesheets to avoid oklch/oklab parsing
-            const stylesheets = clonedDoc.querySelectorAll('link[rel="stylesheet"], style');
-            stylesheets.forEach(sheet => sheet.remove());
-            
-            // Apply computed styles as inline styles to all elements
-            const allElements = clonedDoc.querySelectorAll('*');
-            allElements.forEach(el => {
-              try {
-                const computed = window.getComputedStyle(el);
-                
-                // Helper to convert oklch/oklab to fallback
-                const safeColor = (color, fallback) => {
-                  if (!color || color === 'none' || color === 'transparent') return color;
-                  if (color.includes('oklch') || color.includes('oklab')) return fallback;
-                  return color;
-                };
-                
-                // Apply key styles inline
-                el.style.color = safeColor(computed.color, '#000000');
-                el.style.backgroundColor = safeColor(computed.backgroundColor, 'transparent');
-                el.style.borderTopColor = safeColor(computed.borderTopColor, '#e5e7eb');
-                el.style.borderRightColor = safeColor(computed.borderRightColor, '#e5e7eb');
-                el.style.borderBottomColor = safeColor(computed.borderBottomColor, '#e5e7eb');
-                el.style.borderLeftColor = safeColor(computed.borderLeftColor, '#e5e7eb');
-                el.style.borderWidth = computed.borderWidth;
-                el.style.borderStyle = computed.borderStyle;
-                el.style.borderRadius = computed.borderRadius;
-                el.style.padding = computed.padding;
-                el.style.margin = computed.margin;
-                el.style.fontSize = computed.fontSize;
-                el.style.fontWeight = computed.fontWeight;
-                el.style.fontFamily = computed.fontFamily;
-                el.style.lineHeight = computed.lineHeight;
-                el.style.textAlign = computed.textAlign;
-                el.style.display = computed.display;
-                el.style.flexDirection = computed.flexDirection;
-                el.style.justifyContent = computed.justifyContent;
-                el.style.alignItems = computed.alignItems;
-                el.style.gap = computed.gap;
-                el.style.width = computed.width;
-                el.style.height = computed.height;
-                el.style.maxWidth = computed.maxWidth;
-                el.style.maxHeight = computed.maxHeight;
-                el.style.overflow = computed.overflow;
-                el.style.position = computed.position;
-                el.style.top = computed.top;
-                el.style.right = computed.right;
-                el.style.bottom = computed.bottom;
-                el.style.left = computed.left;
-                el.style.objectFit = computed.objectFit;
-                el.style.flexShrink = computed.flexShrink;
-                el.style.flexGrow = computed.flexGrow;
-                
-                // Remove box-shadow if it contains oklch/oklab
-                const boxShadow = computed.boxShadow;
-                if (boxShadow && (boxShadow.includes('oklch') || boxShadow.includes('oklab'))) {
-                  el.style.boxShadow = 'none';
-                } else {
-                  el.style.boxShadow = boxShadow;
-                }
-                
-                // Remove outline if it contains oklch/oklab  
-                const outline = computed.outline;
-                if (outline && (outline.includes('oklch') || outline.includes('oklab'))) {
-                  el.style.outline = 'none';
-                }
-              } catch (e) {
-                // Ignore errors for elements that can't be styled
-              }
-            });
+        const dataUrl = await window.domtoimage.toPng(previewRef.current, {
+          quality: 1,
+          scale: 2,
+          bgcolor: '#ffffff',
+          style: {
+            'transform': 'none',
+            'transform-origin': 'top left'
           }
         });
         
-        const image = canvas.toDataURL("image/png");
         const link = document.createElement("a");
-        link.href = image;
+        link.href = dataUrl;
         link.download = `binhvuong-ad-${adFormat}-${Date.now()}.png`;
         link.click();
       } catch (err) {
