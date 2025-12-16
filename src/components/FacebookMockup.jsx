@@ -144,59 +144,74 @@ export default function App() {
                 element.style.height = 'auto';
             }
             
-            // Fix oklch colors - inject CSS to override all oklch with safe colors
-            const style = clonedDoc.createElement('style');
-            style.textContent = `
-              * {
-                --tw-ring-color: #3b82f6 !important;
-                --tw-ring-offset-color: #ffffff !important;
-              }
-              .text-gray-100 { color: #f3f4f6 !important; }
-              .text-gray-200 { color: #e5e7eb !important; }
-              .text-gray-300 { color: #d1d5db !important; }
-              .text-gray-400 { color: #9ca3af !important; }
-              .text-gray-500 { color: #6b7280 !important; }
-              .text-gray-600 { color: #4b5563 !important; }
-              .text-gray-700 { color: #374151 !important; }
-              .text-gray-800 { color: #1f2937 !important; }
-              .text-gray-900 { color: #111827 !important; }
-              .bg-gray-50 { background-color: #f9fafb !important; }
-              .bg-gray-100 { background-color: #f3f4f6 !important; }
-              .bg-gray-200 { background-color: #e5e7eb !important; }
-              .bg-gray-300 { background-color: #d1d5db !important; }
-              .bg-white { background-color: #ffffff !important; }
-              .border-gray-100 { border-color: #f3f4f6 !important; }
-              .border-gray-200 { border-color: #e5e7eb !important; }
-              .border-gray-300 { border-color: #d1d5db !important; }
-              .ring-white { --tw-ring-color: #ffffff !important; }
-              .ring-2 { box-shadow: 0 0 0 2px #ffffff !important; }
-            `;
-            clonedDoc.head.appendChild(style);
+            // Remove ALL stylesheets to avoid oklch/oklab parsing
+            const stylesheets = clonedDoc.querySelectorAll('link[rel="stylesheet"], style');
+            stylesheets.forEach(sheet => sheet.remove());
             
-            // Also directly set inline styles on all elements
+            // Apply computed styles as inline styles to all elements
             const allElements = clonedDoc.querySelectorAll('*');
             allElements.forEach(el => {
-              const computed = window.getComputedStyle(el);
-              
-              // Get computed color values and replace if oklch
-              const color = computed.color;
-              const bgColor = computed.backgroundColor;
-              const borderColor = computed.borderColor;
-              
-              if (color && color.includes('oklch')) {
-                el.style.color = '#000000';
-              }
-              if (bgColor && bgColor.includes('oklch')) {
-                el.style.backgroundColor = 'transparent';
-              }
-              if (borderColor && borderColor.includes('oklch')) {
-                el.style.borderColor = '#e5e7eb';
-              }
-              
-              // Remove any box-shadow with oklch
-              const boxShadow = computed.boxShadow;
-              if (boxShadow && boxShadow.includes('oklch')) {
-                el.style.boxShadow = 'none';
+              try {
+                const computed = window.getComputedStyle(el);
+                
+                // Helper to convert oklch/oklab to fallback
+                const safeColor = (color, fallback) => {
+                  if (!color || color === 'none' || color === 'transparent') return color;
+                  if (color.includes('oklch') || color.includes('oklab')) return fallback;
+                  return color;
+                };
+                
+                // Apply key styles inline
+                el.style.color = safeColor(computed.color, '#000000');
+                el.style.backgroundColor = safeColor(computed.backgroundColor, 'transparent');
+                el.style.borderTopColor = safeColor(computed.borderTopColor, '#e5e7eb');
+                el.style.borderRightColor = safeColor(computed.borderRightColor, '#e5e7eb');
+                el.style.borderBottomColor = safeColor(computed.borderBottomColor, '#e5e7eb');
+                el.style.borderLeftColor = safeColor(computed.borderLeftColor, '#e5e7eb');
+                el.style.borderWidth = computed.borderWidth;
+                el.style.borderStyle = computed.borderStyle;
+                el.style.borderRadius = computed.borderRadius;
+                el.style.padding = computed.padding;
+                el.style.margin = computed.margin;
+                el.style.fontSize = computed.fontSize;
+                el.style.fontWeight = computed.fontWeight;
+                el.style.fontFamily = computed.fontFamily;
+                el.style.lineHeight = computed.lineHeight;
+                el.style.textAlign = computed.textAlign;
+                el.style.display = computed.display;
+                el.style.flexDirection = computed.flexDirection;
+                el.style.justifyContent = computed.justifyContent;
+                el.style.alignItems = computed.alignItems;
+                el.style.gap = computed.gap;
+                el.style.width = computed.width;
+                el.style.height = computed.height;
+                el.style.maxWidth = computed.maxWidth;
+                el.style.maxHeight = computed.maxHeight;
+                el.style.overflow = computed.overflow;
+                el.style.position = computed.position;
+                el.style.top = computed.top;
+                el.style.right = computed.right;
+                el.style.bottom = computed.bottom;
+                el.style.left = computed.left;
+                el.style.objectFit = computed.objectFit;
+                el.style.flexShrink = computed.flexShrink;
+                el.style.flexGrow = computed.flexGrow;
+                
+                // Remove box-shadow if it contains oklch/oklab
+                const boxShadow = computed.boxShadow;
+                if (boxShadow && (boxShadow.includes('oklch') || boxShadow.includes('oklab'))) {
+                  el.style.boxShadow = 'none';
+                } else {
+                  el.style.boxShadow = boxShadow;
+                }
+                
+                // Remove outline if it contains oklch/oklab  
+                const outline = computed.outline;
+                if (outline && (outline.includes('oklch') || outline.includes('oklab'))) {
+                  el.style.outline = 'none';
+                }
+              } catch (e) {
+                // Ignore errors for elements that can't be styled
               }
             });
           }
