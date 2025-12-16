@@ -143,6 +143,28 @@ export default function App() {
                 element.style.overflow = 'visible'; 
                 element.style.height = 'auto';
             }
+            
+            // Fix oklch colors - convert to rgb for html2canvas compatibility
+            const allElements = clonedDoc.querySelectorAll('*');
+            allElements.forEach(el => {
+              const computed = window.getComputedStyle(el);
+              const propsToCheck = ['color', 'background-color', 'border-color', 'border-top-color', 'border-right-color', 'border-bottom-color', 'border-left-color', 'outline-color'];
+              
+              propsToCheck.forEach(prop => {
+                const value = computed.getPropertyValue(prop);
+                if (value && value.includes('oklch')) {
+                  // Fallback colors
+                  const camelProp = prop.replace(/-([a-z])/g, (g) => g[1].toUpperCase());
+                  if (prop.includes('background')) {
+                    el.style[camelProp] = 'transparent';
+                  } else if (prop === 'color') {
+                    el.style[camelProp] = '#000000';
+                  } else {
+                    el.style[camelProp] = '#e5e7eb';
+                  }
+                }
+              });
+            });
           }
         });
         
