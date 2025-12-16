@@ -131,19 +131,28 @@ export default function App() {
       try {
         window.scrollTo(0, 0);
         
-        const dataUrl = await window.domtoimage.toPng(previewRef.current, {
+        // Get actual dimensions of the preview element
+        const element = previewRef.current;
+        const rect = element.getBoundingClientRect();
+        const width = element.offsetWidth;
+        const height = element.offsetHeight;
+        
+        const dataUrl = await window.domtoimage.toPng(element, {
           quality: 1,
-          scale: 2,
-          bgcolor: '#ffffff',
+          width: width,
+          height: height,
           style: {
             'transform': 'none',
-            'transform-origin': 'top left'
+            'transform-origin': 'top left',
+            'width': width + 'px',
+            'height': height + 'px',
+            'overflow': 'visible'
           }
         });
         
         const link = document.createElement("a");
         link.href = dataUrl;
-        link.download = `binhvuong-ad-${adFormat}-${Date.now()}.png`;
+        link.download = `binhvuong-ad-${adFormat}-${isMobile ? 'mobile' : 'desktop'}-${Date.now()}.png`;
         link.click();
       } catch (err) {
         console.error("Lỗi khi tải ảnh:", err);
