@@ -41,12 +41,23 @@ export default function App() {
     albumImages: [] 
   });
 
-  // Load dom-to-image-more (better modern CSS support)
+  // Load modern-screenshot library (supports oklch/oklab)
   useEffect(() => {
+    // Load html-to-image (better CSS support than html2canvas)
     const script = document.createElement('script');
-    script.src = 'https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.5/dist/dom-to-image-more.min.js';
+    script.src = 'https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js';
     script.async = true;
-    script.onload = () => setLoadingLib(false);
+    script.onload = () => {
+      setLoadingLib(false);
+    };
+    script.onerror = () => {
+      // Fallback to dom-to-image-more
+      const fallbackScript = document.createElement('script');
+      fallbackScript.src = 'https://cdn.jsdelivr.net/npm/dom-to-image-more@3.4.5/dist/dom-to-image-more.min.js';
+      fallbackScript.async = true;
+      fallbackScript.onload = () => setLoadingLib(false);
+      document.body.appendChild(fallbackScript);
+    };
     document.body.appendChild(script);
     return () => {
       if (document.body.contains(script)) {
@@ -122,40 +133,74 @@ export default function App() {
   };
 
   const handleDownload = async () => {
-    if (!window.domtoimage) {
+    const htmlToImage = window.htmlToImage || window.domtoimage;
+    
+    if (!htmlToImage) {
       alert("Đang tải thư viện, vui lòng thử lại sau giây lát...");
       return;
     }
 
     if (previewRef.current) {
       try {
-        window.scrollTo(0, 0);
+        window.scrollTo(0, 0); 
         
-        // Get actual dimensions of the preview element
         const element = previewRef.current;
-        const rect = element.getBoundingClientRect();
+        const pixelRatio = 2; // High quality export
+        
+        // Get actual dimensions
         const width = element.offsetWidth;
         const height = element.offsetHeight;
         
-        const dataUrl = await window.domtoimage.toPng(element, {
+        // Use toPng with proper options
+        const dataUrl = await htmlToImage.toPng(element, {
           quality: 1,
+          pixelRatio: pixelRatio,
           width: width,
           height: height,
+          backgroundColor: '#ffffff',
           style: {
             'transform': 'none',
             'transform-origin': 'top left',
-            'width': width + 'px',
-            'height': height + 'px',
-            'overflow': 'visible'
+          },
+          filter: (node) => {
+            // Exclude elements that might cause issues
+            if (node.tagName === 'SCRIPT' || node.tagName === 'LINK') {
+              return false;
+            }
+            return true;
           }
         });
         
         const link = document.createElement("a");
         link.href = dataUrl;
-        link.download = `binhvuong-ad-${adFormat}-${isMobile ? 'mobile' : 'desktop'}-${Date.now()}.png`;
+        link.download = `binhvuong-ad-${adFormat}-${Date.now()}.png`;
         link.click();
       } catch (err) {
         console.error("Lỗi khi tải ảnh:", err);
+        
+        // Fallback: try with domtoimage if htmlToImage failed
+        if (window.domtoimage && window.htmlToImage) {
+          try {
+            const element = previewRef.current;
+            const dataUrl = await window.domtoimage.toPng(element, {
+              quality: 1,
+              width: element.offsetWidth * 2,
+              height: element.offsetHeight * 2,
+              style: {
+                'transform': 'scale(2)',
+                'transform-origin': 'top left',
+              }
+            });
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = `binhvuong-ad-${adFormat}-${Date.now()}.png`;
+            link.click();
+            return;
+          } catch (e) {
+            console.error("Fallback cũng lỗi:", e);
+          }
+        }
+        
         alert("Có lỗi xảy ra khi tạo ảnh. Vui lòng thử lại.");
       }
     }
