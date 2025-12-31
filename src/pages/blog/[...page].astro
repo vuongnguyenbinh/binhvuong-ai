@@ -1,13 +1,18 @@
 ---
+import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { categories, getCategoryColor, getCategoryBySlug } from '../../data/categories';
 
-// Fetch all posts from Content Collection, sorted by date
-const allPosts = await getCollection('posts', ({ data }) => !data.draft);
-const posts = allPosts.sort(
-  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-);
+export const getStaticPaths = (async ({ paginate }) => {
+  const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+  );
+  return paginate(sortedPosts, { pageSize: 9 });
+}) satisfies GetStaticPaths;
+
+const { page } = Astro.props;
 
 // Format date helper
 const formatDate = (date: Date) => {
@@ -17,10 +22,29 @@ const formatDate = (date: Date) => {
     year: 'numeric',
   });
 };
+
+// Generate page numbers for pagination
+const totalPages = page.lastPage;
+const currentPage = page.currentPage;
+const getPageNumbers = () => {
+  const pages: (number | string)[] = [];
+  if (totalPages <= 5) {
+    for (let i = 1; i <= totalPages; i++) pages.push(i);
+  } else {
+    pages.push(1);
+    if (currentPage > 3) pages.push('...');
+    for (let i = Math.max(2, currentPage - 1); i <= Math.min(totalPages - 1, currentPage + 1); i++) {
+      pages.push(i);
+    }
+    if (currentPage < totalPages - 2) pages.push('...');
+    pages.push(totalPages);
+  }
+  return pages;
+};
 ---
 
 <BaseLayout
-  title="Blog"
+  title={currentPage > 1 ? `Blog - Trang ${currentPage}` : 'Blog'}
   description="Bài viết về AI Marketing, Automation và Deep Work. Chia sẻ kinh nghiệm thực chiến cho doanh nghiệp Việt Nam."
 >
   <section class="py-16 lg:py-24 bg-white dark:bg-charcoal">
@@ -54,10 +78,10 @@ const formatDate = (date: Date) => {
       </div>
 
       <!-- Posts Grid -->
-      {posts.length > 0 ? (
+      {page.data.length > 0 ? (
         <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {
-            posts.map((post) => {
+            page.data.map((post) => {
               const cat = getCategoryBySlug(post.data.category);
               const postUrl = `/blog/${post.data.category}/${post.slug}/`;
               return (
@@ -106,6 +130,69 @@ const formatDate = (date: Date) => {
         <div class="text-center py-12">
           <p class="text-gray-500 dark:text-gray-400">Chưa có bài viết nào.</p>
         </div>
+      )}
+
+      <!-- Pagination -->
+      {totalPages > 1 && (
+        <nav class="flex justify-center mt-12" aria-label="Pagination">
+          <div class="flex items-center gap-2">
+            {/* Previous */}
+            {page.url.prev ? (
+              <a
+                href={page.url.prev}
+                class="px-4 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+              >
+                ← Trước
+              </a>
+            ) : (
+              <span class="px-4 h-10 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-white/5 text-gray-400 cursor-not-allowed">
+                ← Trước
+              </span>
+            )}
+
+            {/* Page Numbers */}
+            {getPageNumbers().map((pageNum) => {
+              if (pageNum === '...') {
+                return <span class="text-gray-400 px-2">...</span>;
+              }
+              const isCurrentPage = pageNum === currentPage;
+              const pageUrl = pageNum === 1 ? '/blog/' : `/blog/${pageNum}/`;
+              return isCurrentPage ? (
+                <span class="w-10 h-10 flex items-center justify-center rounded-lg bg-bv-red text-white font-medium">
+                  {pageNum}
+                </span>
+              ) : (
+                <a
+                  href={pageUrl}
+                  class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+                >
+                  {pageNum}
+                </a>
+              );
+            })}
+
+            {/* Next */}
+            {page.url.next ? (
+              <a
+                href={page.url.next}
+                class="px-4 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+              >
+                Sau →
+              </a>
+            ) : (
+              <span class="px-4 h-10 flex items-center justify-center rounded-lg bg-gray-100/50 dark:bg-white/5 text-gray-400 cursor-not-allowed">
+                Sau →
+              </span>
+            )}
+          </div>
+        </nav>
+      )}
+
+      <!-- Page Info -->
+      {totalPages > 1 && (
+        <p class="text-center mt-4 text-sm text-gray-500">
+          Trang {currentPage} / {totalPages} ({page.total} bài viết)
+        </p>
       )}
     </div>
   </section>
