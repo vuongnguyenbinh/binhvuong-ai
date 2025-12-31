@@ -1,0 +1,206 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import { getCategoryBySlug, getCategoryColor } from '../../../data/categories';
+
+// Generate static paths for all posts
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: {
+      category: post.data.category,
+      slug: post.slug
+    },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+const cat = getCategoryBySlug(post.data.category);
+
+// Format date helper
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+};
+
+// Related posts (same category, excluding current)
+const allPosts = await getCollection('posts', ({ data, slug }) =>
+  !data.draft && data.category === post.data.category && slug !== post.slug
+);
+const relatedPosts = allPosts.slice(0, 3);
+---
+
+<BaseLayout
+  title={post.data.title}
+  description={post.data.description}
+  image={post.data.ogImage || post.data.image}
+>
+  <article class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="mb-8 text-sm">
+        <ol class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+          <li><a href="/" class="hover:text-bv-red">Trang chủ</a></li>
+          <li>/</li>
+          <li><a href="/blog/" class="hover:text-bv-red">Blog</a></li>
+          <li>/</li>
+          <li>
+            <a href={`/blog/${post.data.category}/`} class="hover:text-bv-red">
+              {cat?.label}
+            </a>
+          </li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-10">
+        <div class="flex items-center gap-3 mb-4">
+          <span class={`px-3 py-1 text-sm font-medium rounded-full ${getCategoryColor(cat?.color || 'gray')}`}>
+            {cat?.icon} {cat?.label}
+          </span>
+          <span class="text-sm text-gray-500 dark:text-gray-400">
+            {post.data.readingTime}
+          </span>
+        </div>
+
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4 leading-tight">
+          {post.data.title}
+        </h1>
+
+        <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">
+          {post.data.description}
+        </p>
+
+        <div class="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
+          <div class="flex items-center gap-2">
+            <div class="w-10 h-10 rounded-full bg-bv-red text-white flex items-center justify-center font-bold">
+              BV
+            </div>
+            <div>
+              <p class="font-medium text-gray-900 dark:text-white">{post.data.author}</p>
+              <p>{formatDate(post.data.publishDate)}</p>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Image -->
+      {post.data.image && (
+        <div class="aspect-[16/9] rounded-2xl overflow-hidden mb-10 bg-gray-200 dark:bg-gray-700">
+          <img
+            src={post.data.image}
+            alt={post.data.imageAlt || post.data.title}
+            class="w-full h-full object-cover"
+          />
+        </div>
+      )}
+
+      <!-- Content -->
+      <div class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
+        prose-p:text-gray-600 dark:prose-p:text-gray-300
+        prose-a:text-bv-red prose-a:no-underline hover:prose-a:underline
+        prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:rounded
+        prose-pre:bg-gray-900 prose-pre:text-gray-100
+        prose-blockquote:border-l-bv-red prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800/50
+        prose-img:rounded-xl
+      ">
+        <Content />
+      </div>
+
+      <!-- Tags -->
+      {post.data.tags && post.data.tags.length > 0 && (
+        <div class="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+          <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Tags:</h3>
+          <div class="flex flex-wrap gap-2">
+            {post.data.tags.map((tag: string) => (
+              <span class="px-3 py-1 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 text-sm rounded-full">
+                #{tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Share -->
+      <div class="mt-10 pt-10 border-t border-gray-200 dark:border-gray-700">
+        <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Chia sẻ bài viết:</h3>
+        <div class="flex gap-3">
+          <a
+            href={`https://www.facebook.com/sharer/sharer.php?u=${Astro.url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            Facebook
+          </a>
+          <a
+            href={`https://twitter.com/intent/tweet?url=${Astro.url}&text=${encodeURIComponent(post.data.title)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+          >
+            X (Twitter)
+          </a>
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${Astro.url}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="px-4 py-2 bg-blue-700 text-white text-sm font-medium rounded-lg hover:bg-blue-800 transition-colors"
+          >
+            LinkedIn
+          </a>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- Related Posts -->
+  {relatedPosts.length > 0 && (
+    <section class="py-16 bg-gray-50 dark:bg-charcoal-light/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="text-2xl font-bold mb-8">Bài viết liên quan</h2>
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {relatedPosts.map((relatedPost) => {
+            const relatedCat = getCategoryBySlug(relatedPost.data.category);
+            const postUrl = `/blog/${relatedPost.data.category}/${relatedPost.slug}/`;
+            return (
+              <article class="group bg-white dark:bg-charcoal border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden hover:border-bv-red/30 transition-all">
+                <a href={postUrl} class="block">
+                  <div class="aspect-[16/9] relative overflow-hidden bg-gray-200 dark:bg-gray-700">
+                    {relatedPost.data.image ? (
+                      <img
+                        src={relatedPost.data.image}
+                        alt={relatedPost.data.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <div class="w-full h-full flex items-center justify-center text-4xl">
+                        {relatedCat?.icon}
+                      </div>
+                    )}
+                  </div>
+                </a>
+                <div class="p-5">
+                  <h3 class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-bv-red transition-colors">
+                    <a href={postUrl}>{relatedPost.data.title}</a>
+                  </h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">
+                    {relatedPost.data.description}
+                  </p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  )}
+</BaseLayout>
