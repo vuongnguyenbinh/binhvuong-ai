@@ -1,0 +1,122 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Generate static paths for all hubs
+export async function getStaticPaths() {
+  const hubs = await getCollection('hubs');
+  return hubs.map((hub) => ({
+    params: { slug: hub.slug },
+    props: { hub },
+  }));
+}
+
+const { hub } = Astro.props;
+const { Content } = await hub.render();
+
+const getColorClasses = (color: string) => {
+  const colorMap: Record<string, { bg: string; text: string; border: string }> = {
+    purple: { bg: 'bg-purple-500/10', text: 'text-purple-500', border: 'border-purple-500/30' },
+    orange: { bg: 'bg-orange-500/10', text: 'text-orange-500', border: 'border-orange-500/30' },
+    yellow: { bg: 'bg-yellow-500/10', text: 'text-yellow-600', border: 'border-yellow-500/30' },
+    green: { bg: 'bg-green-500/10', text: 'text-green-500', border: 'border-green-500/30' },
+    blue: { bg: 'bg-blue-500/10', text: 'text-blue-500', border: 'border-blue-500/30' },
+  };
+  return colorMap[color] || colorMap.purple;
+};
+
+const colors = getColorClasses(hub.data.color);
+---
+
+<BaseLayout
+  title={hub.data.title}
+  description={hub.data.description}
+  image={hub.data.image}
+>
+  <article class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="mb-8 text-sm">
+        <ol class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+          <li><a href="/" class="hover:text-bv-red">Trang chủ</a></li>
+          <li>/</li>
+          <li><a href="/hub/" class="hover:text-bv-red">Content Hubs</a></li>
+          <li>/</li>
+          <li class="text-gray-900 dark:text-white">{hub.data.title}</li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-12">
+        <div class={`w-20 h-20 ${colors.bg} rounded-2xl flex items-center justify-center mb-6 text-4xl`}>
+          {hub.data.icon}
+        </div>
+
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">{hub.data.title}</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">{hub.data.description}</p>
+
+        <div class="flex items-center gap-4 text-sm text-gray-500">
+          <span>{hub.data.chapters.length} chapters</span>
+          <span>•</span>
+          <span>{hub.data.totalReadingTime}</span>
+        </div>
+      </header>
+
+      <!-- Chapters List -->
+      <section class="mb-12">
+        <h2 class="text-2xl font-bold mb-6">Nội dung</h2>
+        <div class="space-y-4">
+          {hub.data.chapters.map((chapter, index) => (
+            <a
+              href={`/hub/${hub.slug}/${chapter.slug}/`}
+              class={`block p-6 bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-xl hover:${colors.border} hover:shadow-lg transition-all group`}
+            >
+              <div class="flex items-start gap-4">
+                <div class={`w-10 h-10 ${colors.bg} ${colors.text} rounded-lg flex items-center justify-center font-bold flex-shrink-0`}>
+                  {index + 1}
+                </div>
+                <div class="flex-1">
+                  <h3 class={`font-bold text-lg mb-1 group-hover:${colors.text} transition-colors`}>
+                    {chapter.title}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 text-sm mb-2">{chapter.excerpt}</p>
+                  {chapter.duration && (
+                    <span class="text-xs text-gray-500">{chapter.duration}</span>
+                  )}
+                </div>
+                <svg class={`w-5 h-5 ${colors.text} opacity-0 group-hover:opacity-100 transition-opacity`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Content -->
+      <section class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:font-bold
+        prose-a:text-bv-red prose-a:no-underline hover:prose-a:underline
+      ">
+        <Content />
+      </section>
+
+      <!-- CTA -->
+      <div class="mt-12 p-8 bg-gray-50 dark:bg-charcoal-light/30 rounded-2xl text-center">
+        <h3 class="text-xl font-bold mb-4">Bắt đầu học ngay</h3>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">
+          Hoàn thành {hub.data.chapters.length} chapters để nắm vững kiến thức về {hub.data.title.toLowerCase()}.
+        </p>
+        <a
+          href={`/hub/${hub.slug}/${hub.data.chapters[0].slug}/`}
+          class="inline-flex items-center gap-2 px-6 py-3 bg-bv-red hover:bg-bv-red-hover text-white font-semibold rounded-xl transition-all"
+        >
+          Bắt đầu Chapter 1
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Generate static paths for all courses
+export async function getStaticPaths() {
+  const courses = await getCollection('courses');
+  return courses.map((course) => ({
+    params: { slug: course.slug },
+    props: { course },
+  }));
+}
+
+const { course } = Astro.props;
+const { Content } = await course.render();
+
+const formatPrice = (price: number) => {
+  return new Intl.NumberFormat('vi-VN').format(price);
+};
+
+const totalLessons = course.data.curriculum.reduce(
+  (acc, module) => acc + module.lessons.length,
+  0
+);
+const totalDuration = course.data.curriculum.reduce(
+  (acc, module) => {
+    const hours = parseFloat(module.duration) || 0;
+    return acc + hours;
+  },
+  0
+);
+---
+
+<BaseLayout
+  title={course.data.title}
+  description={course.data.description}
+  image={course.data.image}
+>
+  <article class="bg-white dark:bg-charcoal">
+    <!-- Hero Section -->
+    <section class="py-16 lg:py-24 bg-gradient-to-b from-gray-50 to-white dark:from-charcoal-light/30 dark:to-charcoal">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <!-- Breadcrumb -->
+            <nav class="mb-6 text-sm">
+              <ol class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+                <li><a href="/" class="hover:text-bv-red">Trang chủ</a></li>
+                <li>/</li>
+                <li><a href="/khoa-hoc/" class="hover:text-bv-red">Khóa học</a></li>
+              </ol>
+            </nav>
+
+            <h1 class="text-3xl lg:text-4xl font-bold mb-4">{course.data.title}</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 mb-6">{course.data.description}</p>
+
+            <!-- Stats -->
+            <div class="flex flex-wrap gap-4 mb-8 text-sm text-gray-500">
+              <span>📚 {totalLessons} bài học</span>
+              <span>⏱️ {totalDuration} giờ</span>
+              <span>🎓 Chứng chỉ hoàn thành</span>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-8">
+              {course.data.originalPrice && (
+                <div class="text-lg text-gray-400 line-through">
+                  {formatPrice(course.data.originalPrice)}đ
+                </div>
+              )}
+              <div class="text-4xl font-bold text-bv-red">
+                {formatPrice(course.data.price)}đ
+              </div>
+              {course.data.guarantee && (
+                <p class="text-sm text-green-600 mt-2">✓ {course.data.guarantee}</p>
+              )}
+            </div>
+
+            <!-- CTA -->
+            <a
+              href={course.data.externalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-2 px-8 py-4 bg-bv-red hover:bg-bv-red-hover text-white font-bold text-lg rounded-xl transition-all btn-glow"
+            >
+              Đăng ký ngay
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
+
+          <!-- Course Image -->
+          <div class="aspect-video rounded-2xl overflow-hidden shadow-2xl">
+            <img
+              src={course.data.image}
+              alt={course.data.title}
+              class="w-full h-full object-cover"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    {course.data.features && (
+      <section class="py-12 border-y border-gray-200 dark:border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+            {course.data.features.map((feature) => (
+              <div class="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <span class="text-sm">{feature}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <!-- Content -->
+      <div class="prose prose-lg dark:prose-invert max-w-none mb-16
+        prose-headings:font-bold
+        prose-a:text-bv-red prose-a:no-underline hover:prose-a:underline
+      ">
+        <Content />
+      </div>
+
+      <!-- Curriculum -->
+      <section class="mb-16">
+        <h2 class="text-2xl font-bold mb-8">Nội dung khóa học</h2>
+        <div class="space-y-4">
+          {course.data.curriculum.map((module, moduleIndex) => (
+            <div class="border border-gray-200 dark:border-white/10 rounded-xl overflow-hidden">
+              <div class="p-6 bg-gray-50 dark:bg-charcoal-light/30">
+                <div class="flex items-center justify-between">
+                  <h3 class="font-bold text-lg">
+                    Module {moduleIndex + 1}: {module.moduleTitle}
+                  </h3>
+                  <span class="text-sm text-gray-500">{module.duration}</span>
+                </div>
+              </div>
+              <ul class="divide-y divide-gray-200 dark:divide-white/10">
+                {module.lessons.map((lesson, lessonIndex) => (
+                  <li class="p-4 flex items-center gap-4">
+                    <span class="w-8 h-8 bg-gray-100 dark:bg-white/5 rounded-full flex items-center justify-center text-sm text-gray-500">
+                      {lessonIndex + 1}
+                    </span>
+                    <span class="text-gray-600 dark:text-gray-400">{lesson}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Instructor -->
+      <section class="mb-16 p-8 bg-gray-50 dark:bg-charcoal-light/30 rounded-2xl">
+        <h2 class="text-2xl font-bold mb-6">Giảng viên</h2>
+        <div class="flex items-start gap-6">
+          <div class="w-20 h-20 rounded-full bg-bv-red text-white flex items-center justify-center text-2xl font-bold flex-shrink-0">
+            BV
+          </div>
+          <div>
+            <h3 class="text-xl font-bold mb-2">{course.data.instructor.name}</h3>
+            <p class="text-gray-600 dark:text-gray-400">{course.data.instructor.bio}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials -->
+      {course.data.testimonials && course.data.testimonials.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-8">Học viên nói gì?</h2>
+          <div class="grid md:grid-cols-2 gap-6">
+            {course.data.testimonials.map((testimonial) => (
+              <div class="p-6 bg-gray-50 dark:bg-charcoal-light/30 rounded-xl">
+                <div class="flex items-center gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating }).map(() => (
+                    <span class="text-yellow-500">⭐</span>
+                  ))}
+                </div>
+                <p class="text-gray-600 dark:text-gray-400 mb-4 italic">"{testimonial.quote}"</p>
+                <p class="font-semibold">{testimonial.name}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- FAQ -->
+      {course.data.faq && course.data.faq.length > 0 && (
+        <section class="mb-16">
+          <h2 class="text-2xl font-bold mb-8">Câu hỏi thường gặp</h2>
+          <div class="space-y-4">
+            {course.data.faq.map((item) => (
+              <div class="p-6 bg-gray-50 dark:bg-charcoal-light/30 rounded-xl">
+                <h3 class="font-bold mb-2">{item.question}</h3>
+                <p class="text-gray-600 dark:text-gray-400">{item.answer}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      <!-- Final CTA -->
+      <section class="text-center p-8 bg-bv-red rounded-2xl text-white">
+        <h2 class="text-2xl font-bold mb-4">Sẵn sàng bắt đầu?</h2>
+        <p class="mb-6 opacity-90">Đăng ký ngay hôm nay với giá ưu đãi {formatPrice(course.data.price)}đ</p>
+        <a
+          href={course.data.externalUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 px-8 py-4 bg-white text-bv-red font-bold rounded-xl hover:bg-gray-100 transition-all"
+        >
+          Đăng ký khóa học
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </a>
+      </section>
+    </div>
+  </article>
+</BaseLayout>

@@ -1,82 +1,16 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-const tools = [
-  {
-    title: 'Focus to Notion',
-    description: 'Extension quản lý task với sync 2 chiều Notion. Giúp bạn tập trung vào công việc quan trọng.',
-    image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&q=80',
-    category: 'extensions',
-    users: '1,200+',
-    rating: 4.8,
-    reviewCount: 89,
-    isFree: true,
-    href: '/tools/extensions/focus-to-notion/',
-  },
-  {
-    title: 'Focus to GGSheet',
-    description: 'Sync dữ liệu từ Focus app sang Google Sheets tự động.',
-    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80',
-    category: 'extensions',
-    users: '800+',
-    rating: 4.6,
-    reviewCount: 45,
-    isFree: true,
-    href: '/tools/extensions/focus-to-ggsheet/',
-  },
-  {
-    title: 'Webhook to n8n',
-    description: 'Kết nối webhook với n8n để tự động hóa workflow.',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80',
-    category: 'extensions',
-    users: '500+',
-    rating: 4.7,
-    reviewCount: 32,
-    isFree: true,
-    href: '/tools/extensions/webhook-to-n8n/',
-  },
-  {
-    title: 'MiniCRM Phòng Khám',
-    description: 'Quản lý bệnh nhân và lịch hẹn đơn giản. Phù hợp cho phòng khám nhỏ.',
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80',
-    category: 'crm',
-    users: '450+',
-    rating: 4.9,
-    reviewCount: 52,
-    isFree: false,
-    price: '99k/tháng',
-    href: '/tools/crm/phong-kham/',
-  },
-  {
-    title: 'MiniCRM Bất Động Sản',
-    description: 'Quản lý lead và khách hàng cho môi giới bất động sản.',
-    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&q=80',
-    category: 'crm',
-    users: '300+',
-    rating: 4.8,
-    reviewCount: 28,
-    isFree: false,
-    price: '99k/tháng',
-    href: '/tools/crm/bat-dong-san/',
-  },
-  {
-    title: 'SEO Checker',
-    description: 'Công cụ kiểm tra và đánh giá SEO website miễn phí.',
-    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80',
-    category: 'seo',
-    users: '2,000+',
-    rating: 4.7,
-    reviewCount: 120,
-    isFree: true,
-    href: '/tools/seo/seo-checker/',
-  },
-];
+// Fetch all tools from Content Collection
+const allTools = await getCollection('tools');
 
 const toolCategories = [
   { slug: 'all', label: 'Tất cả', icon: '🔧' },
   { slug: 'extensions', label: 'Extensions', icon: '🔌' },
   { slug: 'crm', label: 'CRM', icon: '💼' },
   { slug: 'seo', label: 'SEO', icon: '🔍' },
+  { slug: 'productivity', label: 'Productivity', icon: '📊' },
 ];
 ---
 
@@ -117,50 +51,61 @@ const toolCategories = [
       </div>
 
       <!-- Tools Grid -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {
-          tools.map((tool) => (
-            <article class="group bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:shadow-xl transition-all">
-              <a href={tool.href} class="block">
-                <div class="aspect-[16/9] relative overflow-hidden">
-                  <img
-                    src={tool.image}
-                    alt={tool.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <span
-                    class={`absolute top-4 left-4 px-2 py-1 text-xs font-semibold rounded ${tool.isFree ? 'bg-green-500 text-white' : 'bg-purple-500 text-white'}`}
-                  >
-                    {tool.isFree ? 'FREE' : 'PRO'}
-                  </span>
-                </div>
-              </a>
-              <div class="p-6">
-                <h3 class="text-lg font-bold mb-2 group-hover:text-blue-500 transition-colors">
-                  <a href={tool.href}>{tool.title}</a>
-                </h3>
-                <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
-                  {tool.description}
-                </p>
-                <div class="flex items-center gap-3 text-sm text-gray-500 mb-4">
-                  <span>👥 {tool.users}</span>
-                  <span>
-                    ⭐ {tool.rating} ({tool.reviewCount})
-                  </span>
-                </div>
-                <div class="flex items-center justify-between">
-                  <span class="text-xs text-gray-400 capitalize">{tool.category}</span>
-                  <a href={tool.href} class="text-bv-red font-semibold text-sm hover:underline">
-                    {tool.isFree ? 'Dùng ngay →' : `${tool.price} →`}
+      {allTools.length > 0 ? (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {
+            allTools.map((tool) => {
+              const toolUrl = `/tools/${tool.slug}/`;
+              return (
+                <article class="group bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden hover:border-blue-500/30 hover:shadow-xl transition-all">
+                  <a href={toolUrl} class="block">
+                    <div class="aspect-[16/9] relative overflow-hidden">
+                      <img
+                        src={tool.data.image}
+                        alt={tool.data.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <span
+                        class={`absolute top-4 left-4 px-2 py-1 text-xs font-semibold rounded ${tool.data.pricing.isFree ? 'bg-green-500 text-white' : 'bg-purple-500 text-white'}`}
+                      >
+                        {tool.data.pricing.isFree ? 'FREE' : 'PRO'}
+                      </span>
+                    </div>
                   </a>
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
+                  <div class="p-6">
+                    <h3 class="text-lg font-bold mb-2 group-hover:text-blue-500 transition-colors">
+                      <a href={toolUrl}>{tool.data.title}</a>
+                    </h3>
+                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-4 line-clamp-2">
+                      {tool.data.description}
+                    </p>
+                    <div class="flex items-center gap-3 text-sm text-gray-500 mb-4">
+                      {tool.data.users && <span>👥 {tool.data.users}</span>}
+                      {tool.data.rating && (
+                        <span>
+                          ⭐ {tool.data.rating} ({tool.data.reviewCount})
+                        </span>
+                      )}
+                    </div>
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs text-gray-400 capitalize">{tool.data.category}</span>
+                      <a href={toolUrl} class="text-bv-red font-semibold text-sm hover:underline">
+                        {tool.data.pricing.isFree ? 'Dùng ngay →' : `${tool.data.pricing.price} →`}
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-500 dark:text-gray-400">Đang cập nhật công cụ...</p>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

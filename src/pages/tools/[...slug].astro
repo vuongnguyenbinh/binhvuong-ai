@@ -1,0 +1,130 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+// Generate static paths for all tools
+export async function getStaticPaths() {
+  const tools = await getCollection('tools');
+  return tools.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { tool },
+  }));
+}
+
+const { tool } = Astro.props;
+const { Content } = await tool.render();
+
+const categoryLabels: Record<string, string> = {
+  extensions: 'Extensions',
+  crm: 'CRM',
+  seo: 'SEO Tools',
+  productivity: 'Productivity',
+};
+---
+
+<BaseLayout
+  title={tool.data.title}
+  description={tool.data.description}
+  image={tool.data.image}
+>
+  <article class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Breadcrumb -->
+      <nav class="mb-8 text-sm">
+        <ol class="flex items-center gap-2 text-gray-500 dark:text-gray-400">
+          <li><a href="/" class="hover:text-bv-red">Trang chủ</a></li>
+          <li>/</li>
+          <li><a href="/tools/" class="hover:text-bv-red">Tools</a></li>
+          <li>/</li>
+          <li class="text-gray-900 dark:text-white">{tool.data.title}</li>
+        </ol>
+      </nav>
+
+      <!-- Header -->
+      <header class="mb-10">
+        <div class="flex items-start gap-6 mb-6">
+          {tool.data.image && (
+            <div class="w-24 h-24 rounded-2xl overflow-hidden bg-gray-200 dark:bg-gray-700 flex-shrink-0">
+              <img src={tool.data.image} alt={tool.data.title} class="w-full h-full object-cover" />
+            </div>
+          )}
+          <div>
+            <div class="flex items-center gap-3 mb-2">
+              <span class="px-3 py-1 bg-blue-500/10 text-blue-500 text-xs font-semibold rounded-full uppercase">
+                {categoryLabels[tool.data.category] || tool.data.category}
+              </span>
+              <span class={`px-3 py-1 text-xs font-semibold rounded-full ${tool.data.pricing.isFree ? 'bg-green-500/10 text-green-500' : 'bg-purple-500/10 text-purple-500'}`}>
+                {tool.data.pricing.isFree ? 'FREE' : tool.data.pricing.price}
+              </span>
+            </div>
+            <h1 class="text-3xl lg:text-4xl font-bold mb-2">{tool.data.title}</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400">{tool.data.description}</p>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="flex items-center gap-6 text-sm text-gray-500">
+          {tool.data.users && <span>👥 {tool.data.users} users</span>}
+          {tool.data.rating && (
+            <span>⭐ {tool.data.rating} ({tool.data.reviewCount} reviews)</span>
+          )}
+        </div>
+      </header>
+
+      <!-- CTA Buttons -->
+      <div class="flex flex-wrap gap-4 mb-10">
+        {tool.data.downloadUrl && (
+          <a
+            href={tool.data.downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-bv-red hover:bg-bv-red-hover text-white font-semibold rounded-xl transition-all"
+          >
+            {tool.data.pricing.isFree ? 'Tải miễn phí' : 'Mua ngay'}
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+          </a>
+        )}
+        {tool.data.demoUrl && (
+          <a
+            href={tool.data.demoUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 font-semibold rounded-xl hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
+          >
+            Xem Demo
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+            </svg>
+          </a>
+        )}
+      </div>
+
+      <!-- Features -->
+      {tool.data.features && tool.data.features.length > 0 && (
+        <section class="mb-10 p-6 bg-gray-50 dark:bg-charcoal-light/30 rounded-2xl">
+          <h2 class="text-lg font-bold mb-4">Tính năng chính</h2>
+          <ul class="grid sm:grid-cols-2 gap-3">
+            {tool.data.features.map((feature) => (
+              <li class="flex items-center gap-3 text-gray-600 dark:text-gray-400">
+                <svg class="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                {feature}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <!-- Content -->
+      <div class="prose prose-lg dark:prose-invert max-w-none
+        prose-headings:font-bold
+        prose-a:text-bv-red prose-a:no-underline hover:prose-a:underline
+      ">
+        <Content />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

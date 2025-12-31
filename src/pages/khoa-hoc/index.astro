@@ -1,37 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-const courses = [
-  {
-    title: 'AI Marketing Thực Chiến',
-    description:
-      'Làm chủ AI trong 30 ngày. Từ ChatGPT, Midjourney đến automation workflow cho Marketing.',
-    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=600&q=80',
-    price: 2990000,
-    originalPrice: 4990000,
-    lessons: 45,
-    duration: '15 giờ',
-    students: '500+',
-    rating: 4.9,
-    features: ['45 bài học video', 'Bài tập thực hành', 'Cộng đồng hỗ trợ', 'Cập nhật miễn phí'],
-    href: '/khoa-hoc/ai-marketing-thuc-chien/',
-    featured: true,
-  },
-  {
-    title: 'Automation Masterclass',
-    description: 'Xây dựng hệ thống tự động hóa với n8n, Make, Zapier cho doanh nghiệp.',
-    image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80',
-    price: 1990000,
-    originalPrice: 3490000,
-    lessons: 32,
-    duration: '12 giờ',
-    students: '300+',
-    rating: 4.8,
-    features: ['32 bài học video', 'Template workflow', 'Support 1-1', 'Lifetime access'],
-    href: '/khoa-hoc/automation-masterclass/',
-    featured: false,
-  },
-];
+// Fetch all courses from Content Collection
+const allCourses = await getCollection('courses');
 
 const formatPrice = (price: number) => {
   return new Intl.NumberFormat('vi-VN').format(price);
@@ -57,92 +29,109 @@ const formatPrice = (price: number) => {
       </div>
 
       <!-- Courses Grid -->
-      <div class="grid lg:grid-cols-2 gap-8">
-        {
-          courses.map((course) => (
-            <article
-              class={`group bg-gray-50 dark:bg-charcoal-light/30 border ${course.featured ? 'border-bv-red/30 ring-2 ring-bv-red/10' : 'border-gray-200 dark:border-white/5'} rounded-2xl overflow-hidden hover:shadow-2xl transition-all`}
-            >
-              {course.featured && (
-                <div class="bg-bv-red text-white text-center py-2 text-sm font-semibold">
-                  ⭐ Khóa học bán chạy nhất
-                </div>
-              )}
+      {allCourses.length > 0 ? (
+        <div class="grid lg:grid-cols-2 gap-8">
+          {
+            allCourses.map((course, index) => {
+              const courseUrl = `/khoa-hoc/${course.slug}/`;
+              const isFeatured = index === 0;
+              const totalLessons = course.data.curriculum.reduce(
+                (acc, module) => acc + module.lessons.length,
+                0
+              );
+              const totalDuration = course.data.curriculum.reduce(
+                (acc, module) => acc + (parseFloat(module.duration) || 0),
+                0
+              );
 
-              <a href={course.href} class="block">
-                <div class="aspect-[16/9] relative overflow-hidden">
-                  <img
-                    src={course.image}
-                    alt={course.title}
-                    class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                  <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
-                    <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
-                      {course.lessons} bài học
-                    </span>
-                    <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
-                      {course.duration}
-                    </span>
-                  </div>
-                </div>
-              </a>
-
-              <div class="p-6 lg:p-8">
-                <h3 class="text-xl lg:text-2xl font-bold mb-3 group-hover:text-bv-red transition-colors">
-                  <a href={course.href}>{course.title}</a>
-                </h3>
-                <p class="text-gray-600 dark:text-gray-400 mb-6">{course.description}</p>
-
-                {/* Stats */}
-                <div class="flex items-center gap-4 mb-6 text-sm text-gray-500">
-                  <span>👥 {course.students} học viên</span>
-                  <span>⭐ {course.rating}/5</span>
-                </div>
-
-                {/* Features */}
-                <ul class="grid grid-cols-2 gap-2 mb-6">
-                  {course.features.map((feature) => (
-                    <li class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                      <svg
-                        class="w-4 h-4 text-green-500 flex-shrink-0"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
-                      {feature}
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Price & CTA */}
-                <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-white/10">
-                  <div>
-                    <div class="text-sm text-gray-400 line-through">
-                      {formatPrice(course.originalPrice)}đ
+              return (
+                <article
+                  class={`group bg-gray-50 dark:bg-charcoal-light/30 border ${isFeatured ? 'border-bv-red/30 ring-2 ring-bv-red/10' : 'border-gray-200 dark:border-white/5'} rounded-2xl overflow-hidden hover:shadow-2xl transition-all`}
+                >
+                  {isFeatured && (
+                    <div class="bg-bv-red text-white text-center py-2 text-sm font-semibold">
+                      ⭐ Khóa học bán chạy nhất
                     </div>
-                    <div class="text-2xl font-bold text-bv-red">{formatPrice(course.price)}đ</div>
-                  </div>
-                  <a
-                    href={course.href}
-                    class="px-6 py-3 bg-bv-red hover:bg-bv-red-hover text-white font-semibold rounded-xl transition-all btn-glow"
-                  >
-                    Xem chi tiết
+                  )}
+
+                  <a href={courseUrl} class="block">
+                    <div class="aspect-[16/9] relative overflow-hidden">
+                      <img
+                        src={course.data.image}
+                        alt={course.data.title}
+                        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
+                        <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
+                          {totalLessons} bài học
+                        </span>
+                        <span class="px-3 py-1 bg-white/20 backdrop-blur-sm text-white text-sm font-medium rounded-full">
+                          {totalDuration} giờ
+                        </span>
+                      </div>
+                    </div>
                   </a>
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
+
+                  <div class="p-6 lg:p-8">
+                    <h3 class="text-xl lg:text-2xl font-bold mb-3 group-hover:text-bv-red transition-colors">
+                      <a href={courseUrl}>{course.data.title}</a>
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">{course.data.description}</p>
+
+                    {/* Features */}
+                    <ul class="grid grid-cols-2 gap-2 mb-6">
+                      {course.data.features.slice(0, 4).map((feature) => (
+                        <li class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                          <svg
+                            class="w-4 h-4 text-green-500 flex-shrink-0"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              d="M5 13l4 4L19 7"
+                            />
+                          </svg>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+
+                    {/* Price & CTA */}
+                    <div class="flex items-center justify-between pt-6 border-t border-gray-200 dark:border-white/10">
+                      <div>
+                        {course.data.originalPrice && (
+                          <div class="text-sm text-gray-400 line-through">
+                            {formatPrice(course.data.originalPrice)}đ
+                          </div>
+                        )}
+                        <div class="text-2xl font-bold text-bv-red">
+                          {formatPrice(course.data.price)}đ
+                        </div>
+                      </div>
+                      <a
+                        href={courseUrl}
+                        class="px-6 py-3 bg-bv-red hover:bg-bv-red-hover text-white font-semibold rounded-xl transition-all btn-glow"
+                      >
+                        Xem chi tiết
+                      </a>
+                    </div>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-500 dark:text-gray-400">Đang cập nhật khóa học...</p>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>

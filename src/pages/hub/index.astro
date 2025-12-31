@@ -1,53 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
 
-const hubs = [
-  {
-    icon: '🤖',
-    title: 'AI Marketing Fundamentals',
-    description: 'Lộ trình từ cơ bản đến nâng cao về AI trong Marketing',
-    chapters: 12,
-    totalTime: '2.5 giờ đọc',
-    color: 'purple',
-    href: '/hub/ai-marketing-co-ban/',
-  },
-  {
-    icon: '⚡',
-    title: 'Automation Playbook',
-    description: 'Hướng dẫn xây dựng workflow tự động cho doanh nghiệp',
-    chapters: 8,
-    totalTime: '2 giờ đọc',
-    color: 'orange',
-    href: '/hub/automation-playbook/',
-  },
-  {
-    icon: '🎯',
-    title: 'Deep Work System',
-    description: 'Phương pháp làm việc tập trung và hiệu quả',
-    chapters: 6,
-    totalTime: '1.5 giờ đọc',
-    color: 'yellow',
-    href: '/hub/deep-work-system/',
-  },
-  {
-    icon: '✍️',
-    title: 'Content Marketing Mastery',
-    description: 'Chiến lược content marketing trong thời đại AI',
-    chapters: 10,
-    totalTime: '3 giờ đọc',
-    color: 'green',
-    href: '/hub/content-marketing-mastery/',
-  },
-  {
-    icon: '🔍',
-    title: 'SEO cho người mới',
-    description: 'Hướng dẫn SEO từ cơ bản đến nâng cao',
-    chapters: 15,
-    totalTime: '4 giờ đọc',
-    color: 'blue',
-    href: '/hub/seo-cho-nguoi-moi/',
-  },
-];
+// Fetch all hubs from Content Collection
+const allHubs = await getCollection('hubs');
 
 const getColorClasses = (color: string) => {
   const colorMap: Record<string, { border: string; bg: string; text: string }> = {
@@ -92,63 +48,70 @@ const getColorClasses = (color: string) => {
       </div>
 
       <!-- Hubs Grid -->
-      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {
-          hubs.map((hub) => {
-            const colors = getColorClasses(hub.color);
-            return (
-              <a
-                href={hub.href}
-                class={`group relative bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl p-8 ${colors.border} hover:shadow-xl transition-all overflow-hidden`}
-              >
-                {/* Glow effect */}
-                <div
-                  class={`absolute top-0 right-0 w-32 h-32 ${colors.bg} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`}
-                />
-
-                <div class="relative">
-                  {/* Icon */}
+      {allHubs.length > 0 ? (
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {
+            allHubs.map((hub) => {
+              const colors = getColorClasses(hub.data.color);
+              const hubUrl = `/hub/${hub.slug}/`;
+              return (
+                <a
+                  href={hubUrl}
+                  class={`group relative bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl p-8 ${colors.border} hover:shadow-xl transition-all overflow-hidden`}
+                >
+                  {/* Glow effect */}
                   <div
-                    class={`w-16 h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-6 text-3xl`}
-                  >
-                    {hub.icon}
-                  </div>
+                    class={`absolute top-0 right-0 w-32 h-32 ${colors.bg} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`}
+                  />
 
-                  {/* Content */}
-                  <h3
-                    class={`text-xl font-bold mb-3 group-hover:${colors.text} transition-colors`}
-                  >
-                    {hub.title}
-                  </h3>
-                  <p class="text-gray-600 dark:text-gray-400 mb-6">{hub.description}</p>
+                  <div class="relative">
+                    {/* Icon */}
+                    <div
+                      class={`w-16 h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-6 text-3xl`}
+                    >
+                      {hub.data.icon}
+                    </div>
 
-                  {/* Meta */}
-                  <div class="flex items-center gap-4 text-sm text-gray-500">
-                    <span>{hub.chapters} chapters</span>
-                    <span>•</span>
-                    <span>{hub.totalTime}</span>
-                  </div>
+                    {/* Content */}
+                    <h3
+                      class={`text-xl font-bold mb-3 group-hover:${colors.text} transition-colors`}
+                    >
+                      {hub.data.title}
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-400 mb-6">{hub.data.description}</p>
 
-                  {/* Arrow */}
-                  <div
-                    class={`mt-6 ${colors.text} font-medium flex items-center gap-2 group-hover:gap-3 transition-all`}
-                  >
-                    Bắt đầu học
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 8l4 4m0 0l-4 4m4-4H3"
-                      />
-                    </svg>
+                    {/* Meta */}
+                    <div class="flex items-center gap-4 text-sm text-gray-500">
+                      <span>{hub.data.chapters.length} chapters</span>
+                      <span>•</span>
+                      <span>{hub.data.totalReadingTime}</span>
+                    </div>
+
+                    {/* Arrow */}
+                    <div
+                      class={`mt-6 ${colors.text} font-medium flex items-center gap-2 group-hover:gap-3 transition-all`}
+                    >
+                      Bắt đầu học
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M17 8l4 4m0 0l-4 4m4-4H3"
+                        />
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              </a>
-            );
-          })
-        }
-      </div>
+                </a>
+              );
+            })
+          }
+        </div>
+      ) : (
+        <div class="text-center py-12">
+          <p class="text-gray-500 dark:text-gray-400">Đang cập nhật nội dung...</p>
+        </div>
+      )}
     </div>
   </section>
 </BaseLayout>
