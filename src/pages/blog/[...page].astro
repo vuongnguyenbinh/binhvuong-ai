@@ -1,18 +1,35 @@
 ---
-import type { GetStaticPaths } from 'astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { categories, getCategoryColor, getCategoryBySlug } from '../../data/categories';
 
-export const getStaticPaths = (async ({ paginate }) => {
-  const allPosts = await getCollection('posts', ({ data }) => !data.draft);
-  const sortedPosts = allPosts.sort(
-    (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
-  );
-  return paginate(sortedPosts, { pageSize: 9 });
-}) satisfies GetStaticPaths;
+// SSR-compatible pagination
+const pageSize = 9;
+const pageParam = Astro.params.page;
+const currentPage = pageParam ? parseInt(pageParam) : 1;
 
-const { page } = Astro.props;
+const allPosts = await getCollection('posts', ({ data }) => !data.draft);
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+const totalPosts = sortedPosts.length;
+const totalPages = Math.ceil(totalPosts / pageSize);
+const start = (currentPage - 1) * pageSize;
+const end = start + pageSize;
+const postsOnPage = sortedPosts.slice(start, end);
+
+// Build page object for template compatibility
+const page = {
+  data: postsOnPage,
+  currentPage,
+  lastPage: totalPages,
+  total: totalPosts,
+  url: {
+    prev: currentPage > 1 ? (currentPage === 2 ? '/blog/' : `/blog/${currentPage - 1}/`) : null,
+    next: currentPage < totalPages ? `/blog/${currentPage + 1}/` : null,
+  },
+};
 
 // Format date helper
 const formatDate = (date: Date) => {
@@ -22,10 +39,6 @@ const formatDate = (date: Date) => {
     year: 'numeric',
   });
 };
-
-// Generate page numbers for pagination
-const totalPages = page.lastPage;
-const currentPage = page.currentPage;
 const getPageNumbers = () => {
   const pages: (number | string)[] = [];
   if (totalPages <= 5) {

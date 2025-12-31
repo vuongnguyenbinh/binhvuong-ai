@@ -3,13 +3,6 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 import { categories, getCategoryColor, getCategoryBySlug } from '../../../data/categories';
 
-// Generate static paths for each category
-export async function getStaticPaths() {
-  return categories.map((cat) => ({
-    params: { category: cat.slug },
-  }));
-}
-
 const { category } = Astro.params;
 const currentCat = getCategoryBySlug(category);
 
