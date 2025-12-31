@@ -1,0 +1,167 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { categories, getCategoryColor } from '../../data/categories';
+
+// Sample posts data - will be replaced with Content Collections
+const posts = [
+  {
+    title: 'Cách xây dựng chiến lược SEO hiệu quả trong năm 2025 với AI',
+    excerpt: 'Hướng dẫn chi tiết về cách kết hợp AI tools vào quy trình SEO...',
+    image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=80',
+    category: 'ai-automation',
+    readingTime: '15 phút',
+    date: '30/12/2025',
+    href: '/blog/ai-automation/chien-luoc-seo-2025/',
+  },
+  {
+    title: 'GEO: Cách thắng trong AI Search',
+    excerpt: 'Generative Engine Optimization là xu hướng SEO mới...',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&q=80',
+    category: 'ai-automation',
+    readingTime: '8 phút',
+    date: '29/12/2025',
+    href: '/blog/ai-automation/geo-ai-search/',
+  },
+  {
+    title: 'LLM Seeding: Chiến lược SEO mới',
+    excerpt: 'Làm sao để content của bạn được AI trích dẫn...',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&q=80',
+    category: 'marketing',
+    readingTime: '10 phút',
+    date: '28/12/2025',
+    href: '/blog/marketing/llm-seeding/',
+  },
+  {
+    title: '7 Chiến lược có backlinks chất lượng',
+    excerpt: 'Cách xây dựng backlinks tự nhiên và bền vững...',
+    image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&q=80',
+    category: 'content',
+    readingTime: '12 phút',
+    date: '27/12/2025',
+    href: '/blog/content/backlinks-chat-luong/',
+  },
+  {
+    title: 'Pomodoro: Tập trung làm việc hiệu quả',
+    excerpt: 'Kỹ thuật quản lý thời gian đơn giản nhưng hiệu quả...',
+    image: 'https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=400&q=80',
+    category: 'deepwork',
+    readingTime: '5 phút',
+    date: '26/12/2025',
+    href: '/blog/deepwork/pomodoro/',
+  },
+  {
+    title: 'Review sách: Deep Work của Cal Newport',
+    excerpt: 'Tại sao làm việc sâu lại quan trọng trong thời đại AI...',
+    image: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=400&q=80',
+    category: 'reviews-sach',
+    readingTime: '8 phút',
+    date: '25/12/2025',
+    href: '/blog/reviews-sach/deep-work-cal-newport/',
+  },
+];
+
+const getCatInfo = (slug: string) => categories.find((c) => c.slug === slug);
+---
+
+<BaseLayout
+  title="Blog"
+  description="Bài viết về AI Marketing, Automation và Deep Work. Chia sẻ kinh nghiệm thực chiến cho doanh nghiệp Việt Nam."
+>
+  <section class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-12">
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">Blog</h1>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Kiến thức thực chiến về AI Marketing, Automation và phương pháp làm việc hiệu quả.
+        </p>
+      </div>
+
+      <!-- Category Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-12">
+        <a
+          href="/blog/"
+          class="px-4 py-2 bg-bv-red text-white text-sm font-medium rounded-full transition-colors"
+        >
+          Tất cả
+        </a>
+        {
+          categories.map((cat) => (
+            <a
+              href={`/blog/${cat.slug}/`}
+              class="px-4 py-2 bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 text-sm font-medium rounded-full hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >
+              {cat.icon} {cat.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <!-- Posts Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          posts.map((post) => {
+            const cat = getCatInfo(post.category);
+            return (
+              <article class="group bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden hover:border-bv-red/30 transition-all card-glow">
+                <a href={post.href} class="block">
+                  <div class="aspect-[16/9] relative overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+                    <span
+                      class={`absolute bottom-3 left-3 px-2 py-1 text-xs font-medium rounded ${getCategoryColor(cat?.color || 'gray')}`}
+                    >
+                      {cat?.icon} {cat?.label}
+                    </span>
+                  </div>
+                </a>
+                <div class="p-5">
+                  <div class="flex items-center gap-2 mb-2 text-xs text-gray-500">
+                    <span>{post.readingTime}</span>
+                    <span>•</span>
+                    <span>{post.date}</span>
+                  </div>
+                  <h3 class="font-bold text-lg mb-2 line-clamp-2 group-hover:text-bv-red transition-colors">
+                    <a href={post.href}>{post.title}</a>
+                  </h3>
+                  <p class="text-sm text-gray-600 dark:text-gray-400 line-clamp-2">{post.excerpt}</p>
+                </div>
+              </article>
+            );
+          })
+        }
+      </div>
+
+      <!-- Pagination Placeholder -->
+      <div class="flex justify-center mt-12">
+        <nav class="flex items-center gap-2">
+          <span
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-bv-red text-white font-medium"
+            >1</span
+          >
+          <a
+            href="#"
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >2</a
+          >
+          <a
+            href="#"
+            class="w-10 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >3</a
+          >
+          <span class="text-gray-400">...</span>
+          <a
+            href="#"
+            class="px-4 h-10 flex items-center justify-center rounded-lg bg-gray-100 dark:bg-white/5 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
+            >Next →</a
+          >
+        </nav>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

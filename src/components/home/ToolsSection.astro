@@ -1,0 +1,133 @@
+---
+const tools = [
+  {
+    title: 'Focus to Notion',
+    description: 'Extension quản lý task với sync 2 chiều Notion.',
+    image: 'https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=600&q=80',
+    users: '1,200+',
+    rating: 4.8,
+    reviewCount: 89,
+    isFree: true,
+    color: 'blue',
+    relatedCategory: '/blog/ai-automation/',
+    href: '/tools/extensions/focus-to-notion/',
+  },
+  {
+    title: 'MiniCRM Phòng Khám',
+    description: 'Quản lý bệnh nhân và lịch hẹn đơn giản.',
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&q=80',
+    users: '450+',
+    rating: 4.9,
+    reviewCount: 52,
+    isFree: false,
+    price: '99k/tháng',
+    color: 'purple',
+    relatedCategory: '/blog/ai-automation/',
+    href: '/tools/crm/phong-kham/',
+  },
+  {
+    title: 'SEO Checker',
+    description: 'Công cụ kiểm tra và đánh giá SEO website.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=600&q=80',
+    users: '2,000+',
+    rating: 4.7,
+    reviewCount: 120,
+    isFree: true,
+    color: 'green',
+    relatedCategory: '/blog/marketing/',
+    href: '/tools/seo/seo-checker/',
+  },
+];
+
+const getColorClasses = (color: string) => {
+  const colorMap: Record<string, string> = {
+    blue: 'hover:border-blue-500/30',
+    purple: 'hover:border-purple-500/30',
+    green: 'hover:border-green-500/30',
+  };
+  return colorMap[color] || 'hover:border-gray-500/30';
+};
+
+const getTextColorClass = (color: string) => {
+  const colorMap: Record<string, string> = {
+    blue: 'text-blue-500',
+    purple: 'text-purple-500',
+    green: 'text-green-500',
+  };
+  return colorMap[color] || 'text-gray-500';
+};
+---
+
+<section class="py-16 lg:py-24 bg-section-blue">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between mb-12">
+      <div class="text-center sm:text-left">
+        <span
+          class="inline-block px-3 py-1 bg-blue-500/10 text-blue-500 text-xs font-semibold rounded-full mb-3"
+          >TOOLS & EXTENSIONS</span
+        >
+        <h2 class="text-2xl lg:text-3xl font-bold mb-3">Công cụ giúp bạn làm việc hiệu quả</h2>
+      </div>
+      <a
+        href="/tools/"
+        class="hidden sm:inline-flex items-center gap-2 text-blue-500 font-medium hover:underline"
+      >
+        Xem tất cả công cụ →
+      </a>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {
+        tools.map((tool) => (
+          <div
+            class={`group bg-white dark:bg-charcoal-light/50 border border-gray-200 dark:border-white/5 rounded-2xl overflow-hidden ${getColorClasses(tool.color)} hover:shadow-xl transition-all`}
+          >
+            <a href={tool.href} class="block">
+              <div class="aspect-[16/9] relative overflow-hidden">
+                <img
+                  src={tool.image}
+                  alt={tool.title}
+                  class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <span
+                  class={`absolute top-4 left-4 px-2 py-1 text-xs font-semibold rounded ${tool.isFree ? 'bg-green-500 text-white' : 'bg-purple-500 text-white'}`}
+                >
+                  {tool.isFree ? 'FREE' : 'PRO'}
+                </span>
+              </div>
+            </a>
+            <div class="p-6">
+              <h3
+                class={`text-lg font-bold mb-2 group-hover:${getTextColorClass(tool.color)} transition-colors`}
+              >
+                <a href={tool.href}>{tool.title}</a>
+              </h3>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-4">{tool.description}</p>
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3 text-sm text-gray-500">
+                  <span>👥 {tool.users}</span>
+                  <span>
+                    ⭐ {tool.rating} ({tool.reviewCount})
+                  </span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between">
+                <a
+                  href={tool.relatedCategory}
+                  class={`text-xs ${getTextColorClass(tool.color)} hover:underline`}
+                >
+                  Xem bài viết liên quan →
+                </a>
+                <a href={tool.href} class="text-bv-red font-semibold text-sm hover:underline">
+                  {tool.isFree ? 'Dùng ngay' : tool.price}
+                </a>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

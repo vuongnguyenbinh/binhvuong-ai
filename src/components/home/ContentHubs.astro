@@ -1,0 +1,128 @@
+---
+const hubs = [
+  {
+    icon: '🤖',
+    title: 'AI Marketing',
+    description: 'Cơ bản đến nâng cao',
+    count: 12,
+    color: 'purple',
+    href: '/hub/ai-marketing-co-ban/',
+  },
+  {
+    icon: '⚡',
+    title: 'Automation',
+    description: 'Workflow tự động',
+    count: 8,
+    color: 'orange',
+    href: '/hub/automation-playbook/',
+  },
+  {
+    icon: '🎯',
+    title: 'Deep Work',
+    description: 'Làm việc hiệu quả',
+    count: 6,
+    color: 'yellow',
+    href: '/hub/deep-work-system/',
+  },
+  {
+    icon: '✍️',
+    title: 'Content',
+    description: 'Viết content chất',
+    count: 10,
+    color: 'green',
+    href: '/hub/content-marketing-mastery/',
+  },
+  {
+    icon: '🔍',
+    title: 'SEO',
+    description: 'Cho người mới',
+    count: 15,
+    color: 'blue',
+    href: '/hub/seo-cho-nguoi-moi/',
+  },
+];
+
+const getColorClasses = (color: string) => {
+  const colorMap: Record<
+    string,
+    { bg: string; hover: string; text: string; glow: string }
+  > = {
+    purple: {
+      bg: 'bg-purple-500/10',
+      hover: 'hover:border-purple-500/50',
+      text: 'text-purple-500',
+      glow: 'bg-purple-500/10',
+    },
+    orange: {
+      bg: 'bg-orange-500/10',
+      hover: 'hover:border-orange-500/50',
+      text: 'text-orange-500',
+      glow: 'bg-orange-500/10',
+    },
+    yellow: {
+      bg: 'bg-yellow-500/10',
+      hover: 'hover:border-yellow-500/50',
+      text: 'text-yellow-600',
+      glow: 'bg-yellow-500/10',
+    },
+    green: {
+      bg: 'bg-green-500/10',
+      hover: 'hover:border-green-500/50',
+      text: 'text-green-500',
+      glow: 'bg-green-500/10',
+    },
+    blue: {
+      bg: 'bg-blue-500/10',
+      hover: 'hover:border-blue-500/50',
+      text: 'text-blue-500',
+      glow: 'bg-blue-500/10',
+    },
+  };
+  return colorMap[color] || colorMap.purple;
+};
+---
+
+<section class="py-16 lg:py-20 bg-section-alt">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-12">
+      <span
+        class="inline-block px-3 py-1 bg-purple-500/10 text-purple-500 text-xs font-semibold rounded-full mb-3"
+        >RESOURCE HUBS</span
+      >
+      <h2 class="text-2xl lg:text-3xl font-bold mb-3">Trung tâm kiến thức</h2>
+      <p class="text-gray-600 dark:text-gray-400">Học theo chủ đề từ cơ bản đến nâng cao</p>
+    </div>
+
+    <div class="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
+      {
+        hubs.map((hub) => {
+          const colors = getColorClasses(hub.color);
+          return (
+            <a
+              href={hub.href}
+              class={`group relative bg-white dark:bg-charcoal-light/50 border border-gray-200 dark:border-white/5 rounded-2xl p-6 ${colors.hover} hover:shadow-xl transition-all overflow-hidden`}
+            >
+              <div
+                class={`absolute top-0 right-0 w-24 h-24 ${colors.glow} rounded-full blur-2xl group-hover:scale-150 transition-transform`}
+              />
+              <div class="relative">
+                <div
+                  class={`w-12 h-12 ${colors.bg} rounded-xl flex items-center justify-center mb-4 text-2xl`}
+                >
+                  {hub.icon}
+                </div>
+                <h3
+                  class={`font-bold text-lg mb-2 group-hover:${colors.text} transition-colors`}
+                >
+                  {hub.title}
+                </h3>
+                <p class="text-sm text-gray-500 mb-3">{hub.description}</p>
+                <span class={`text-xs ${colors.text} font-medium`}>{hub.count} bài viết →</span>
+              </div>
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

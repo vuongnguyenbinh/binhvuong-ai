@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteConfig } from '../data/site-config';
+---
+
+<BaseLayout
+  title="Về tôi"
+  description="Bình Vương - Chuyên gia AI Marketing và Automation. Chia sẻ kinh nghiệm thực chiến cho doanh nghiệp Việt Nam."
+>
+  <section class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <div class="w-32 h-32 mx-auto mb-6 rounded-full overflow-hidden border-4 border-bv-red/20">
+          <img
+            src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&q=80"
+            alt={siteConfig.author.name}
+            class="w-full h-full object-cover"
+          />
+        </div>
+        <h1 class="text-3xl lg:text-4xl font-bold mb-3">Bình Vương</h1>
+        <p class="text-xl text-gray-600 dark:text-gray-400">AI Marketing & Automation Specialist</p>
+      </div>
+
+      <!-- Bio -->
+      <div class="prose prose-lg dark:prose-invert max-w-none mb-12">
+        <p>
+          Xin chào! Tôi là <strong>Bình Vương</strong>, người sáng lập blog này với mục tiêu chia sẻ
+          kiến thức về AI Marketing và Automation cho doanh nghiệp Việt Nam.
+        </p>
+
+        <h2>Hành trình của tôi</h2>
+        <p>
+          Với hơn 8 năm kinh nghiệm trong lĩnh vực Digital Marketing, tôi đã chứng kiến và tham gia
+          vào cuộc cách mạng AI trong marketing. Từ những ngày đầu với chatbot đơn giản đến việc xây
+          dựng các hệ thống automation phức tạp, tôi luôn tìm cách tối ưu hóa quy trình và mang lại
+          giá trị thực sự cho doanh nghiệp.
+        </p>
+
+        <h2>Triết lý "Simple but Optimal"</h2>
+        <p>
+          Tôi tin rằng công nghệ không cần phức tạp để hiệu quả. Slogan <em>"Simple but Optimal"</em
+          > (Đơn giản nhưng Tối ưu) phản ánh cách tiếp cận của tôi: tìm giải pháp đơn giản nhất mà vẫn
+          đạt được kết quả tốt nhất.
+        </p>
+
+        <h2>Những gì tôi chia sẻ</h2>
+        <ul>
+          <li><strong>AI Marketing:</strong> Cách sử dụng AI tools trong marketing hiệu quả</li>
+          <li><strong>Automation:</strong> Xây dựng workflow tự động với n8n, Make, Zapier</li>
+          <li><strong>Content Strategy:</strong> Chiến lược content trong thời đại AI</li>
+          <li><strong>Deep Work:</strong> Phương pháp làm việc tập trung và hiệu quả</li>
+        </ul>
+
+        <h2>Liên hệ</h2>
+        <p>Bạn có thể kết nối với tôi qua:</p>
+        <ul>
+          <li>
+            Email: <a href={`mailto:${siteConfig.author.email}`}>{siteConfig.author.email}</a>
+          </li>
+          <li>Phone: {siteConfig.author.phone}</li>
+          <li>
+            Facebook: <a
+              href={siteConfig.social.facebook}
+              target="_blank"
+              rel="noopener noreferrer">Facebook Page</a
+            >
+          </li>
+          <li>
+            LinkedIn: <a
+              href={siteConfig.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer">LinkedIn Profile</a
+            >
+          </li>
+        </ul>
+      </div>
+
+      <!-- Stats -->
+      <div
+        class="grid grid-cols-2 lg:grid-cols-4 gap-6 p-8 bg-gray-50 dark:bg-charcoal-light rounded-2xl"
+      >
+        <div class="text-center">
+          <div class="text-3xl font-bold text-bv-red mb-1">300+</div>
+          <div class="text-sm text-gray-500">Doanh nghiệp hỗ trợ</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-bv-red mb-1">1,000+</div>
+          <div class="text-sm text-gray-500">Subscribers</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-bv-red mb-1">100+</div>
+          <div class="text-sm text-gray-500">Bài viết</div>
+        </div>
+        <div class="text-center">
+          <div class="text-3xl font-bold text-bv-red mb-1">8+</div>
+          <div class="text-sm text-gray-500">Năm kinh nghiệm</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

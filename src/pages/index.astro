@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import FeaturedPosts from '../components/home/FeaturedPosts.astro';
+import ContentHubs from '../components/home/ContentHubs.astro';
+import EbookCTA from '../components/home/EbookCTA.astro';
+import ToolsSection from '../components/home/ToolsSection.astro';
+import NewsletterBanner from '../components/home/NewsletterBanner.astro';
+---
+
+<BaseLayout
+  title="AI Marketing Dễ Dàng"
+  description="Chia sẻ kinh nghiệm thực chiến về AI, Marketing và Automation cho doanh nghiệp Việt Nam. Simple but Optimal."
+>
+  <Hero />
+  <FeaturedPosts />
+  <ContentHubs />
+  <EbookCTA />
+  <ToolsSection />
+  <NewsletterBanner />
+</BaseLayout>

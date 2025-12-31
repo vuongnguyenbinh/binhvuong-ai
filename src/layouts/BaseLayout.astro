@@ -1,0 +1,93 @@
+---
+import '../styles/global.css';
+import Header from '../components/global/Header.astro';
+import Footer from '../components/global/Footer.astro';
+import SEOHead from '../components/seo/SEOHead.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+  ogImage?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  canonicalUrl?: string;
+  noIndex?: boolean;
+  publishDate?: Date;
+  modifiedDate?: Date;
+  category?: string;
+  tags?: string[];
+  type?: 'website' | 'article';
+}
+
+const {
+  title,
+  description,
+  image,
+  ogImage,
+  ogTitle,
+  ogDescription,
+  canonicalUrl,
+  noIndex = false,
+  publishDate,
+  modifiedDate,
+  category,
+  tags = [],
+  type = 'website',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <SEOHead
+      title={title}
+      description={description}
+      image={image}
+      ogImage={ogImage}
+      ogTitle={ogTitle}
+      ogDescription={ogDescription}
+      canonicalUrl={canonicalUrl}
+      noIndex={noIndex}
+      publishDate={publishDate}
+      modifiedDate={modifiedDate}
+      category={category}
+      tags={tags}
+      type={type}
+    />
+  </head>
+  <body
+    class="bg-white dark:bg-charcoal text-gray-900 dark:text-white font-sans antialiased transition-colors duration-300"
+  >
+    <Header />
+    <main>
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+      // Theme initialization
+      const theme = (() => {
+        if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+          return localStorage.getItem('theme');
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+        return 'light';
+      })();
+
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+
+      window.localStorage.setItem('theme', theme);
+    </script>
+  </body>
+</html>

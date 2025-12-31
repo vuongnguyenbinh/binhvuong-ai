@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://demo.binhvuong.ai.vn/sitemap-index.xml
+
+# Disallow
+Disallow: /thank-you/
+Disallow: /admin/
+Disallow: /api/

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const hubs = [
+  {
+    icon: '🤖',
+    title: 'AI Marketing Fundamentals',
+    description: 'Lộ trình từ cơ bản đến nâng cao về AI trong Marketing',
+    chapters: 12,
+    totalTime: '2.5 giờ đọc',
+    color: 'purple',
+    href: '/hub/ai-marketing-co-ban/',
+  },
+  {
+    icon: '⚡',
+    title: 'Automation Playbook',
+    description: 'Hướng dẫn xây dựng workflow tự động cho doanh nghiệp',
+    chapters: 8,
+    totalTime: '2 giờ đọc',
+    color: 'orange',
+    href: '/hub/automation-playbook/',
+  },
+  {
+    icon: '🎯',
+    title: 'Deep Work System',
+    description: 'Phương pháp làm việc tập trung và hiệu quả',
+    chapters: 6,
+    totalTime: '1.5 giờ đọc',
+    color: 'yellow',
+    href: '/hub/deep-work-system/',
+  },
+  {
+    icon: '✍️',
+    title: 'Content Marketing Mastery',
+    description: 'Chiến lược content marketing trong thời đại AI',
+    chapters: 10,
+    totalTime: '3 giờ đọc',
+    color: 'green',
+    href: '/hub/content-marketing-mastery/',
+  },
+  {
+    icon: '🔍',
+    title: 'SEO cho người mới',
+    description: 'Hướng dẫn SEO từ cơ bản đến nâng cao',
+    chapters: 15,
+    totalTime: '4 giờ đọc',
+    color: 'blue',
+    href: '/hub/seo-cho-nguoi-moi/',
+  },
+];
+
+const getColorClasses = (color: string) => {
+  const colorMap: Record<string, { border: string; bg: string; text: string }> = {
+    purple: {
+      border: 'hover:border-purple-500/50',
+      bg: 'bg-purple-500/10',
+      text: 'text-purple-500',
+    },
+    orange: {
+      border: 'hover:border-orange-500/50',
+      bg: 'bg-orange-500/10',
+      text: 'text-orange-500',
+    },
+    yellow: {
+      border: 'hover:border-yellow-500/50',
+      bg: 'bg-yellow-500/10',
+      text: 'text-yellow-600',
+    },
+    green: { border: 'hover:border-green-500/50', bg: 'bg-green-500/10', text: 'text-green-500' },
+    blue: { border: 'hover:border-blue-500/50', bg: 'bg-blue-500/10', text: 'text-blue-500' },
+  };
+  return colorMap[color] || colorMap.purple;
+};
+---
+
+<BaseLayout
+  title="Content Hubs"
+  description="Trung tâm kiến thức về AI Marketing, Automation và Deep Work. Học theo chủ đề từ cơ bản đến nâng cao."
+>
+  <section class="py-16 lg:py-24 bg-white dark:bg-charcoal">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <!-- Header -->
+      <div class="text-center mb-16">
+        <span
+          class="inline-block px-3 py-1 bg-purple-500/10 text-purple-500 text-xs font-semibold rounded-full mb-4"
+          >CONTENT HUBS</span
+        >
+        <h1 class="text-3xl lg:text-4xl font-bold mb-4">Trung tâm kiến thức</h1>
+        <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          Học theo chủ đề từ cơ bản đến nâng cao. Mỗi hub là một lộ trình học tập hoàn chỉnh.
+        </p>
+      </div>
+
+      <!-- Hubs Grid -->
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {
+          hubs.map((hub) => {
+            const colors = getColorClasses(hub.color);
+            return (
+              <a
+                href={hub.href}
+                class={`group relative bg-gray-50 dark:bg-charcoal-light/30 border border-gray-200 dark:border-white/5 rounded-2xl p-8 ${colors.border} hover:shadow-xl transition-all overflow-hidden`}
+              >
+                {/* Glow effect */}
+                <div
+                  class={`absolute top-0 right-0 w-32 h-32 ${colors.bg} rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity`}
+                />
+
+                <div class="relative">
+                  {/* Icon */}
+                  <div
+                    class={`w-16 h-16 ${colors.bg} rounded-2xl flex items-center justify-center mb-6 text-3xl`}
+                  >
+                    {hub.icon}
+                  </div>
+
+                  {/* Content */}
+                  <h3
+                    class={`text-xl font-bold mb-3 group-hover:${colors.text} transition-colors`}
+                  >
+                    {hub.title}
+                  </h3>
+                  <p class="text-gray-600 dark:text-gray-400 mb-6">{hub.description}</p>
+
+                  {/* Meta */}
+                  <div class="flex items-center gap-4 text-sm text-gray-500">
+                    <span>{hub.chapters} chapters</span>
+                    <span>•</span>
+                    <span>{hub.totalTime}</span>
+                  </div>
+
+                  {/* Arrow */}
+                  <div
+                    class={`mt-6 ${colors.text} font-medium flex items-center gap-2 group-hover:gap-3 transition-all`}
+                  >
+                    Bắt đầu học
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 8l4 4m0 0l-4 4m4-4H3"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </a>
+            );
+          })
+        }
+      </div>
+    </div>
+  </section>
+</BaseLayout>
