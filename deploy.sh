@@ -1,12 +1,7 @@
 #!/bin/bash
-# Deploy Astro site to demo.binhvuong.ai.vn
-
-set -e
-
-echo "Building site..."
+cd ~/apps/binhvuong-ai
+git pull origin main
+npm install
 npm run build
-
-echo "Deploying to server..."
-rsync -avz --delete dist/ binhvuong@demo.binhvuong.ai.vn:/var/www/demo/
-
-echo "Done! Site live at https://demo.binhvuong.ai.vn"
+pm2 restart binhvuong-ai
+echo "Deployed at $(date)"
