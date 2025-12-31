@@ -6,10 +6,14 @@ import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
 import markdoc from "@astrojs/markdoc";
 import keystatic from "@keystatic/astro";
+import node from "@astrojs/node";
 
 export default defineConfig({
   site: "https://binhvuong.ai.vn",
   output: "server",
+  adapter: node({
+    mode: "standalone",
+  }),
   trailingSlash: "always",
 
   integrations: [
