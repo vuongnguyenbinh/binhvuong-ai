@@ -62,33 +62,34 @@ const staticCaseStudies = [
   }
 ];
 
+// Industry labels and colors
+const industryConfig: Record<string, { label: string; color: string }> = {
+  healthcare: { label: 'Y TẾ', color: 'green' },
+  education: { label: 'GIÁO DỤC', color: 'blue' },
+  'real-estate': { label: 'BẤT ĐỘNG SẢN', color: 'purple' },
+  sme: { label: 'BÁN LẺ', color: 'orange' },
+  other: { label: 'KHÁC', color: 'gray' }
+};
+
 // Use Content Collection data if available, otherwise use static
 const displayCaseStudies = caseStudies.length > 0
-  ? caseStudies.map(cs => ({
-      slug: cs.slug,
-      title: cs.data.client,
-      industry: cs.data.industry.toUpperCase(),
-      industryColor: getIndustryColor(cs.data.industry),
-      description: cs.data.challenge.substring(0, 50) + '...',
-      image: cs.data.image,
-      metrics: cs.data.results?.slice(0, 2).map((r: any) => ({
-        value: r.change,
-        label: r.metric,
-        color: getIndustryColor(cs.data.industry)
-      })) || []
-    }))
+  ? caseStudies.map(cs => {
+      const config = industryConfig[cs.data.industry] || industryConfig.other;
+      return {
+        slug: cs.id,
+        title: cs.data.client,
+        industry: config.label,
+        industryColor: config.color,
+        description: cs.data.challenge.substring(0, 60) + '...',
+        image: cs.data.image,
+        metrics: cs.data.results?.slice(0, 2).map((r: any) => ({
+          value: r.change,
+          label: r.metric,
+          color: config.color
+        })) || []
+      };
+    })
   : staticCaseStudies;
-
-function getIndustryColor(industry: string): string {
-  const colors: Record<string, string> = {
-    healthcare: 'green',
-    education: 'blue',
-    'real-estate': 'purple',
-    sme: 'orange',
-    other: 'gray'
-  };
-  return colors[industry] || 'gray';
-}
 ---
 
 <section class="py-16 lg:py-24 bg-section-alt">
