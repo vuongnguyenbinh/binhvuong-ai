@@ -2,16 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Generate static paths for all hubs
-export async function getStaticPaths() {
-  const hubs = await getCollection('hubs');
-  return hubs.map((hub) => ({
-    params: { slug: hub.slug },
-    props: { hub },
-  }));
+// SSR: fetch hub by slug
+const { slug } = Astro.params;
+const hubs = await getCollection('hubs');
+const hub = hubs.find((h) => h.slug === slug);
+
+if (!hub) {
+  return Astro.redirect('/404');
 }
 
-const { hub } = Astro.props;
 const { Content } = await hub.render();
 
 const getColorClasses = (color: string) => {

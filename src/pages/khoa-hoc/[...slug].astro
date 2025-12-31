@@ -2,16 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Generate static paths for all courses
-export async function getStaticPaths() {
-  const courses = await getCollection('courses');
-  return courses.map((course) => ({
-    params: { slug: course.slug },
-    props: { course },
-  }));
+// SSR: fetch course by slug
+const { slug } = Astro.params;
+const courses = await getCollection('courses');
+const course = courses.find((c) => c.slug === slug);
+
+if (!course) {
+  return Astro.redirect('/404');
 }
 
-const { course } = Astro.props;
 const { Content } = await course.render();
 
 const formatPrice = (price: number) => {

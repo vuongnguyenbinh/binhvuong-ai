@@ -2,16 +2,15 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection } from 'astro:content';
 
-// Generate static paths for all tools
-export async function getStaticPaths() {
-  const tools = await getCollection('tools');
-  return tools.map((tool) => ({
-    params: { slug: tool.slug },
-    props: { tool },
-  }));
+// SSR: fetch tool by slug
+const { slug } = Astro.params;
+const tools = await getCollection('tools');
+const tool = tools.find((t) => t.slug === slug);
+
+if (!tool) {
+  return Astro.redirect('/404');
 }
 
-const { tool } = Astro.props;
 const { Content } = await tool.render();
 
 const categoryLabels: Record<string, string> = {

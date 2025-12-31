@@ -2,15 +2,15 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-export async function getStaticPaths() {
-  const caseStudies = await getCollection('case-studies');
-  return caseStudies.map((cs) => ({
-    params: { slug: cs.id },
-    props: { caseStudy: cs },
-  }));
+// SSR: fetch case study by slug
+const { slug } = Astro.params;
+const caseStudies = await getCollection('case-studies');
+const caseStudy = caseStudies.find((cs) => cs.id === slug);
+
+if (!caseStudy) {
+  return Astro.redirect('/404');
 }
 
-const { caseStudy } = Astro.props;
 const { Content } = await render(caseStudy);
 
 // Industry config
